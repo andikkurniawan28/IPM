@@ -33,6 +33,12 @@
                                         </li>
                                         <li class="nav-item">
                                             <a class="nav-link text-light fw-semibold px-3 py-2 rounded hover-highlight"
+                                                href="{{ route('satuan.index') }}">
+                                                📏 Satuan
+                                            </a>
+                                        </li>
+                                        <li class="nav-item">
+                                            <a class="nav-link text-light fw-semibold px-3 py-2 rounded hover-highlight"
                                                 href="{{ route('parameter.index') }}">
                                                 📊 Parameter
                                             </a>

@@ -4,23 +4,20 @@
     <div class="container-fluid py-0 px-6">
 
         <div class="d-flex justify-content-between align-items-center mb-3">
-            <h4>Daftar Parameter</h4>
-            <a href="{{ route('parameter.create') }}" class="btn btn-primary">
+            <h4>Daftar Satuan</h4>
+            <a href="{{ route('satuan.create') }}" class="btn btn-primary">
                 <i class="bi bi-plus-circle"></i> Tambah
             </a>
         </div>
 
         <div class="card shadow-sm bg-light">
             <div class="card-body">
-                <table id="parameterTable" class="table table-bordered table-hover table-sm w-100">
+                <table id="satuanTable" class="table table-bordered table-hover table-sm w-100">
                     <thead class="table-light">
                         <tr>
                             <th>No</th>
                             <th>Nama</th>
                             <th>Simbol</th>
-                            <th>Kategori</th>
-                            <th>Satuan</th>
-                            <th>Keterangan</th>
                             <th>Aksi</th>
                         </tr>
                     </thead>
@@ -39,18 +36,15 @@
 
     <script>
         $(function() {
-            $('#parameterTable').DataTable({
+            $('#satuanTable').DataTable({
                 processing: true,
                 serverSide: true,
-                ajax: "{{ route('parameter.index') }}",
+                ajax: "{{ route('satuan.index') }}",
                 order: [[1, 'asc']],
                 columns: [
                     { data: 'DT_RowIndex', name: 'DT_RowIndex', orderable: false, searchable: false },
                     { data: 'nama', name: 'nama' },
                     { data: 'simbol', name: 'simbol' },
-                    { data: 'kategori_parameter.nama', name: 'kategori_parameter.nama' },
-                    { data: 'satuan_nama', name: 'satuan_nama' },
-                    { data: 'keterangan', name: 'keterangan' },
                     { data: 'aksi', name: 'aksi', orderable: false, searchable: false }
                 ]
             });

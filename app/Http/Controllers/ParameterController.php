@@ -21,7 +21,9 @@ class ParameterController extends Controller
                     return $row->kategori_parameter->nama ?? '-';
                 })
                 ->addColumn('satuan_nama', function ($row) {
-                    return $row->satuan->nama ?? '-';
+                    return $row->satuan
+                        ? $row->satuan->nama . '<sub>(' . $row->satuan->simbol . ')</sub>'
+                        : '-';
                 })
                 ->addColumn('aksi', function ($row) {
                     $editUrl = route('parameter.edit', $row->id);
@@ -35,7 +37,7 @@ class ParameterController extends Controller
                     </form>
                 ';
                 })
-                ->rawColumns(['aksi'])
+                ->rawColumns(['aksi', 'satuan_nama'])
                 ->make(true);
         }
 
