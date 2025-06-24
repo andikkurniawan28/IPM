@@ -82,7 +82,7 @@ class DatabaseSeeder extends Seeder
         $satuan = Satuan::pluck('id', 'simbol');
 
         // Insert parameter
-        Parameter::insert([
+        $parameters = [
             [
                 'nama' => 'Rotation Speed',
                 'kategori_parameter_id' => $kategori['Peralatan'],
@@ -132,7 +132,11 @@ class DatabaseSeeder extends Seeder
                 'simbol' => 'flow',
                 'keterangan' => 'Jumlah aliran.'
             ]
-        ]);
+        ];
+
+        foreach($parameters as $parameter){
+            Parameter::create($parameter);
+        }
 
         // Insert zona
         Zona::insert([
@@ -182,9 +186,6 @@ class DatabaseSeeder extends Seeder
         }
 
         // Insert ke tabel pivot parameter_titik_pengamatan
-        // ParameterTitikPengamatan::create($insert);
-        foreach ($insert as $data) {
-            ParameterTitikPengamatan::create($data); // ✅ Akan memicu event model 'created'
-        }
+        ParameterTitikPengamatan::insert($insert);
     }
 }

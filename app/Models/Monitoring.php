@@ -10,4 +10,8 @@ class Monitoring extends Model
     use HasFactory;
 
     protected $guarded = [];
+
+    public function titik_pengamatan(){
+        return $this->belongsTo(TitikPengamatan::class);
+    }
 }

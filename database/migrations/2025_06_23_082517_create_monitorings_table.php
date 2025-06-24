@@ -15,6 +15,7 @@ return new class extends Migration
             $table->id();
             $table->date('periode');
             $table->time('jam');
+            $table->foreignId('titik_pengamatan_id')->constrained();
             $table->timestamp('created_at')->useCurrent();
             $table->timestamp('updated_at')->useCurrent()->useCurrentOnUpdate();
         });
