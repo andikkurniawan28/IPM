@@ -13,7 +13,7 @@ return new class extends Migration
     {
         Schema::create('titik_pengamatans', function (Blueprint $table) {
             $table->id();
-            $table->integer('urutan')->unique();
+            $table->integer('urutan')->nullable()->unique();
             $table->foreignId('zona_id')->constrained();
             $table->string('kode')->unique();
             $table->string('nama')->unique();

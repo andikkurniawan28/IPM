@@ -60,7 +60,7 @@ class MonitoringController extends Controller
     public function create()
     {
         return view('monitoring.create', [
-            'titik_pengamatans' => TitikPengamatan::all(),
+            'titik_pengamatans' => TitikPengamatan::orderBy('urutan', 'asc')->get(),
             'parameters' => Parameter::all(),
         ]);
     }
@@ -114,7 +114,7 @@ class MonitoringController extends Controller
     {
         return view('monitoring.edit', [
             'monitoring' => $monitoring,
-            'titik_pengamatans' => TitikPengamatan::all(),
+            'titik_pengamatans' => TitikPengamatan::orderBy('urutan', 'asc')->get(),
             'parameters' => Parameter::all(),
         ]);
     }

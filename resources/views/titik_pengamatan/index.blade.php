@@ -5,9 +5,14 @@
 
         <div class="d-flex justify-content-between align-items-center mb-3">
             <h4>Daftar Titik Pengamatan</h4>
-            <a href="{{ route('titik_pengamatan.create') }}" class="btn btn-primary">
-                <i class="bi bi-plus-circle"></i> Tambah
-            </a>
+            <div class="btn-group mb-3" role="group" aria-label="Aksi Titik Pengamatan">
+                <a href="{{ route('titik_pengamatan.create') }}" class="btn btn-primary">
+                    <i class="bi bi-plus-circle"></i> Tambah
+                </a>
+                <a href="{{ route('ubah_urutan_titik_pengamatan.index') }}" class="btn btn-secondary">
+                    <i class="bi bi-arrows-move"></i> Ubah Urutan
+                </a>
+            </div>
         </div>
 
         <div class="card shadow-sm bg-light">

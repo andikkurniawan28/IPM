@@ -1,16 +1,20 @@
 <?php
 
+use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthController;
-use App\Http\Controllers\DashboardController;
-use App\Http\Controllers\KategoriParameterController;
-use App\Http\Controllers\MonitoringController;
-use App\Http\Controllers\ParameterController;
 use App\Http\Controllers\RoleController;
-use App\Http\Controllers\SatuanController;
-use App\Http\Controllers\TitikPengamatanController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\ZonaController;
-use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\SatuanController;
+use App\Http\Controllers\DashboardController;
+use App\Http\Controllers\ParameterController;
+use App\Http\Controllers\MonitoringController;
+use App\Http\Controllers\TitikPengamatanController;
+use App\Http\Controllers\KategoriParameterController;
+use App\Http\Controllers\MonitoringAllController;
+use App\Http\Controllers\MonitoringPerZonaController;
+use App\Http\Controllers\MonitoringPerKategoriController;
+use App\Http\Controllers\UbahUrutanTitikPengamatanController;
 
 /*
 |--------------------------------------------------------------------------
@@ -37,3 +41,10 @@ Route::get('/login', [AuthController::class, 'login'])->name('login');
 Route::post('/login', [AuthController::class, 'loginProcess'])->name('login_process');
 Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
 Route::post('/change_session_periode', [AuthController::class, 'changeSessionPeriode'])->name('change_session_periode');
+Route::get('/ubah_urutan_titik_pengamatan', [UbahUrutanTitikPengamatanController::class, 'index'])->name('ubah_urutan_titik_pengamatan.index')->middleware(['auth']);
+Route::post('/ubah_urutan_titik_pengamatan', [UbahUrutanTitikPengamatanController::class, 'process'])->name('ubah_urutan_titik_pengamatan.process')->middleware(['auth']);
+Route::get('/monitoring_per_kategori/{kategori_parameter_id}', [MonitoringPerKategoriController::class, 'index'])->name('monitoring_per_kategori.index')->middleware(['auth']);
+Route::get('/monitoring_per_kategori/data/{kategori_parameter_id}', [MonitoringPerKategoriController::class, 'data'])->name('monitoring_per_kategori.data');
+Route::get('/monitoring_per_zona/{zona_parameter_id}', [MonitoringPerZonaController::class, 'index'])->name('monitoring_per_zona.index')->middleware(['auth']);
+Route::get('/monitoring_per_zona/data/{zona_parameter_id}', [MonitoringPerZonaController::class, 'data'])->name('monitoring_per_zona.data');
+Route::get('/monitoring_all', [MonitoringAllController::class, 'index'])->name('monitoring_all')->middleware(['auth']);
