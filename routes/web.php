@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\KategoriParameterController;
+use App\Http\Controllers\MonitoringController;
 use App\Http\Controllers\ParameterController;
 use App\Http\Controllers\SatuanController;
 use App\Http\Controllers\TitikPengamatanController;
@@ -26,3 +27,4 @@ Route::resource('/zona', ZonaController::class);
 Route::resource('/zona', ZonaController::class);
 Route::resource('/parameter', ParameterController::class);
 Route::resource('/titik_pengamatan', TitikPengamatanController::class);
+Route::resource('/monitoring', MonitoringController::class);

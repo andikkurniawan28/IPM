@@ -12,13 +12,9 @@
 @section('scripts')
     <script>
         document.addEventListener('DOMContentLoaded', () => {
-            function formatTime(dateStr) {
-                const date = new Date(dateStr);
-                return date.toLocaleTimeString('id-ID', {
-                    hour: '2-digit',
-                    minute: '2-digit',
-                    second: '2-digit'
-                });
+
+            function formatJam(jamStr) {
+                return jamStr?.substring(0, 5) || '-';
             }
 
             function loadTitikPengamatan() {
@@ -32,33 +28,45 @@
                             const col = document.createElement('div');
                             col.className = 'col-md-4';
 
-                            let headerCells = '<th><small>Time</small></th>';
-                            let valueCells =
-                                `<td><small>${tp.updated_at ? formatTime(tp.updated_at) : '-'}</small></td>`;
-
-                            tp.parameter_titik_pengamatans.forEach(param => {
-                                headerCells +=
-                                    `<th><small>${param.parameter.simbol}</small></th>`;
-                                valueCells +=
-                                    `<td>-</td>`; // Ganti '-' dengan param.nilai jika tersedia
+                            // Buat header kolom parameter
+                            let headerRow =
+                            `<th><small>Jam</small></th>`;
+                            tp.parameters.forEach(p => {
+                                headerRow +=
+                                    `<th><small>${p.simbol}<sub>(${p.satuan})</sub></small></th>`;
                             });
+
+                            // Buat baris data monitoring
+                            let bodyRows = '';
+                            tp.monitorings.forEach(m => {
+                                let row =
+                                    `<td><small>${formatJam(m.jam)}</small></td>`;
+                                tp.parameters.forEach(p => {
+                                    const val = m['param' + p.id];
+                                    row += `<td>${val ?? '-'}</td>`;
+                                });
+                                bodyRows += `<tr>${row}</tr>`;
+                            });
+
+                            // Jika tidak ada monitoring, tampilkan baris kosong
+                            if (tp.monitorings.length === 0) {
+                                let emptyRow =
+                                    `<td colspan="${2 + tp.parameters.length}"><small>Tidak ada data</small></td>`;
+                                bodyRows = `<tr>${emptyRow}</tr>`;
+                            }
 
                             col.innerHTML = `
                         <div class="card bg-light shadow-sm h-100">
                             <div class="card-body">
                                 <h5 class="card-title text-dark">${tp.nama}</h5>
-                                <p class="card-text"><small>@${tp.zona.nama}</small></p>
+                                <p class="card-text"><small>@${tp.zona?.nama}</small></p>
                                 <div class="table-responsive">
                                     <table class="table table-bordered table-sm mb-0">
                                         <thead class="table-secondary">
-                                            <tr>
-                                                ${headerCells}
-                                            </tr>
+                                            <tr>${headerRow}</tr>
                                         </thead>
                                         <tbody>
-                                            <tr>
-                                                ${valueCells}
-                                            </tr>
+                                            ${bodyRows}
                                         </tbody>
                                     </table>
                                 </div>
@@ -75,7 +83,7 @@
             }
 
             loadTitikPengamatan();
-            setInterval(loadTitikPengamatan, 60000);
+            setInterval(loadTitikPengamatan, 60000); // refresh tiap 1 menit
         });
     </script>
 @endsection
