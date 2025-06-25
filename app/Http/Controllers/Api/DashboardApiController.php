@@ -10,6 +10,11 @@ use App\Http\Controllers\Controller;
 
 class DashboardApiController extends Controller
 {
+    public function __construct()
+    {
+        $this->middleware('web');
+    }
+
     public function index()
     {
         $titik_pengamatans = TitikPengamatan::with([
@@ -25,9 +30,10 @@ class DashboardApiController extends Controller
             });
 
             $monitorings = Monitoring::where('titik_pengamatan_id', $titik->id)
+                ->where('periode', session('periode'))
                 ->orderByDesc('periode')
                 ->orderByDesc('jam')
-                ->limit(10) // Untuk sementara
+                // ->limit(10) // Untuk sementara
                 ->get()
                 ->map(function ($monitoring) use ($parameterList) {
                     $data = [

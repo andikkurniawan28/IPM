@@ -12,19 +12,22 @@
 
         <div class="card shadow-sm bg-light">
             <div class="card-body">
-                <table id="monitoringTable" class="table table-bordered table-hover table-sm w-100">
-                    <thead class="table-light">
-                        <tr>
-                            <th>No</th>
-                            <th>Periode</th>
-                            <th>Jam</th>
-                            <th>Titik Pengamatan</th>
-                            <th>Nilai</th>
-                            {{-- <th>Keterangan</th> --}}
-                            <th>Aksi</th>
-                        </tr>
-                    </thead>
-                </table>
+                <div class="table-responsive">
+
+                    <table id="monitoringTable" class="table table-bordered table-hover table-sm w-100">
+                        <thead class="table-light">
+                            <tr>
+                                <th>No</th>
+                                <th>Periode</th>
+                                <th>Jam</th>
+                                <th>Titik Pengamatan</th>
+                                <th>Nilai</th>
+                                {{-- <th>Keterangan</th> --}}
+                                <th>Aksi</th>
+                            </tr>
+                        </thead>
+                    </table>
+                </div>
             </div>
         </div>
     </div>
@@ -43,16 +46,39 @@
                 processing: true,
                 serverSide: true,
                 ajax: "{{ route('monitoring.index') }}",
-                order: [[1, 'asc']],
-                columns: [
-                    { data: 'DT_RowIndex', name: 'DT_RowIndex', orderable: false, searchable: false },
-                    { data: 'periode', name: 'periode' },
-                    { data: 'jam', name: 'jam' },
-                    { data: 'titik_pengamatan.nama', name: 'titik_pengamatan.nama' },
-                    { data: 'parameter', name: 'parameter' },
+                order: [
+                    [1, 'asc']
+                ],
+                columns: [{
+                        data: 'DT_RowIndex',
+                        name: 'DT_RowIndex',
+                        orderable: false,
+                        searchable: false
+                    },
+                    {
+                        data: 'periode',
+                        name: 'periode'
+                    },
+                    {
+                        data: 'jam',
+                        name: 'jam'
+                    },
+                    {
+                        data: 'titik_pengamatan.nama',
+                        name: 'titik_pengamatan.nama'
+                    },
+                    {
+                        data: 'parameter',
+                        name: 'parameter'
+                    },
                     // { data: 'satuan_nama', name: 'satuan_nama' },
                     // { data: 'keterangan', name: 'keterangan' },
-                    { data: 'aksi', name: 'aksi', orderable: false, searchable: false }
+                    {
+                        data: 'aksi',
+                        name: 'aksi',
+                        orderable: false,
+                        searchable: false
+                    }
                 ]
             });
         });

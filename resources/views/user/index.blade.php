@@ -4,8 +4,8 @@
     <div class="container-fluid py-0 px-6">
 
         <div class="d-flex justify-content-between align-items-center mb-3">
-            <h4>Daftar Zona</h4>
-            <a href="{{ route('zona.create') }}" class="btn btn-primary">
+            <h4>Daftar User</h4>
+            <a href="{{ route('user.create') }}" class="btn btn-primary">
                 <i class="bi bi-plus-circle"></i> Tambah
             </a>
         </div>
@@ -13,12 +13,14 @@
         <div class="card shadow-sm bg-light">
             <div class="card-body">
                 <div class="table-responsive">
-                    <table id="zonaTable" class="table table-bordered table-hover table-sm w-100">
+                    <table id="userTable" class="table table-bordered table-hover table-sm w-100">
                         <thead class="table-light">
                             <tr>
                                 <th>No</th>
-                                <th>Kode</th>
                                 <th>Nama</th>
+                                <th>Role</th>
+                                <th>Email</th>
+                                <th>Status</th>
                                 <th>Aksi</th>
                             </tr>
                         </thead>
@@ -38,10 +40,10 @@
 
     <script>
         $(function() {
-            $('#zonaTable').DataTable({
+            $('#userTable').DataTable({
                 processing: true,
                 serverSide: true,
-                ajax: "{{ route('zona.index') }}",
+                ajax: "{{ route('user.index') }}",
                 order: [
                     [1, 'asc']
                 ],
@@ -52,12 +54,20 @@
                         searchable: false
                     },
                     {
-                        data: 'kode',
-                        name: 'kode'
+                        data: 'name',
+                        name: 'name'
                     },
                     {
-                        data: 'nama',
-                        name: 'nama'
+                        data: 'role.nama',
+                        name: 'role.nama'
+                    },
+                    {
+                        data: 'email',
+                        name: 'email'
+                    },
+                    {
+                        data: 'status_aktif',
+                        name: 'status_aktif'
                     },
                     {
                         data: 'aksi',

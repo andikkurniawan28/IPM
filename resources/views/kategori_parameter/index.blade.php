@@ -12,16 +12,18 @@
 
         <div class="card shadow-sm bg-light">
             <div class="card-body">
-                <table id="kategori_parameterTable" class="table table-bordered table-hover table-sm w-100">
-                    <thead class="table-light">
-                        <tr>
-                            <th>No</th>
-                            {{-- <th>Kode</th> --}}
-                            <th>Nama</th>
-                            <th>Aksi</th>
-                        </tr>
-                    </thead>
-                </table>
+                <div class="table-responsive">
+                    <table id="kategori_parameterTable" class="table table-bordered table-hover table-sm w-100">
+                        <thead class="table-light">
+                            <tr>
+                                <th>No</th>
+                                {{-- <th>Kode</th> --}}
+                                <th>Nama</th>
+                                <th>Aksi</th>
+                            </tr>
+                        </thead>
+                    </table>
+                </div>
             </div>
         </div>
     </div>
@@ -40,12 +42,26 @@
                 processing: true,
                 serverSide: true,
                 ajax: "{{ route('kategori_parameter.index') }}",
-                order: [[1, 'asc']],
-                columns: [
-                    { data: 'DT_RowIndex', name: 'DT_RowIndex', orderable: false, searchable: false },
+                order: [
+                    [1, 'asc']
+                ],
+                columns: [{
+                        data: 'DT_RowIndex',
+                        name: 'DT_RowIndex',
+                        orderable: false,
+                        searchable: false
+                    },
                     // { data: 'kode', name: 'kode' },
-                    { data: 'nama', name: 'nama' },
-                    { data: 'aksi', name: 'aksi', orderable: false, searchable: false }
+                    {
+                        data: 'nama',
+                        name: 'nama'
+                    },
+                    {
+                        data: 'aksi',
+                        name: 'aksi',
+                        orderable: false,
+                        searchable: false
+                    }
                 ]
             });
         });

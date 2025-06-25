@@ -4,8 +4,8 @@
     <div class="container-fluid py-0 px-6">
 
         <div class="d-flex justify-content-between align-items-center mb-3">
-            <h4>Daftar Zona</h4>
-            <a href="{{ route('zona.create') }}" class="btn btn-primary">
+            <h4>Daftar Role</h4>
+            <a href="{{ route('role.create') }}" class="btn btn-primary">
                 <i class="bi bi-plus-circle"></i> Tambah
             </a>
         </div>
@@ -13,11 +13,12 @@
         <div class="card shadow-sm bg-light">
             <div class="card-body">
                 <div class="table-responsive">
-                    <table id="zonaTable" class="table table-bordered table-hover table-sm w-100">
+
+                    <table id="roleTable" class="table table-bordered table-hover table-sm w-100">
                         <thead class="table-light">
                             <tr>
                                 <th>No</th>
-                                <th>Kode</th>
+                                {{-- <th>Kode</th> --}}
                                 <th>Nama</th>
                                 <th>Aksi</th>
                             </tr>
@@ -38,10 +39,10 @@
 
     <script>
         $(function() {
-            $('#zonaTable').DataTable({
+            $('#roleTable').DataTable({
                 processing: true,
                 serverSide: true,
-                ajax: "{{ route('zona.index') }}",
+                ajax: "{{ route('role.index') }}",
                 order: [
                     [1, 'asc']
                 ],
@@ -51,10 +52,7 @@
                         orderable: false,
                         searchable: false
                     },
-                    {
-                        data: 'kode',
-                        name: 'kode'
-                    },
+                    // { data: 'kode', name: 'kode' },
                     {
                         data: 'nama',
                         name: 'nama'

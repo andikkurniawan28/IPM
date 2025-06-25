@@ -10,6 +10,7 @@
 @endsection
 
 @section('scripts')
+    @include('template.floating-button')
     <script>
         document.addEventListener('DOMContentLoaded', () => {
 

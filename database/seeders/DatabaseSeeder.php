@@ -2,11 +2,13 @@
 
 namespace Database\Seeders;
 
-use Illuminate\Database\Seeder;
+use App\Models\Role;
+use App\Models\User;
 use App\Models\Zona;
 use App\Models\Satuan;
 use App\Models\Parameter;
 use App\Models\TitikPengamatan;
+use Illuminate\Database\Seeder;
 use App\Models\KategoriParameter;
 use App\Models\ParameterTitikPengamatan;
 
@@ -17,6 +19,32 @@ class DatabaseSeeder extends Seeder
      */
     public function run(): void
     {
+        Role::insert([
+            ['nama' => 'Kabag Pabrikasi'],
+            ['nama' => 'Kabag QC'],
+            ['nama' => 'Kabag Teknik'],
+            ['nama' => 'Kasie Pabrikasi'],
+            ['nama' => 'Kasie Lab'],
+            ['nama' => 'Kasie Teknik'],
+            ['nama' => 'Kasubsie Pabrikasi'],
+            ['nama' => 'Kasubsie QC'],
+            ['nama' => 'Kasubsie Teknik'],
+            ['nama' => 'Mandor Pabrikasi'],
+            ['nama' => 'Mandor QC'],
+            ['nama' => 'Mandor Teknik'],
+        ]);
+
+        $roles = Role::all();
+
+        foreach ($roles as $index => $role) {
+            User::create([
+                'role_id' => $role->id,
+                'name' => $role->nama,
+                'email' => 'user' . ($index + 1) . '@example.com',
+                'password' => bcrypt('password'),
+            ]);
+        }
+
         // Insert kategori parameter
         KategoriParameter::insert([
             ['nama' => 'Peralatan'],

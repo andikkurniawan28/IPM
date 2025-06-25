@@ -1,7 +1,21 @@
-<!-- Floating Button -->
-<button class="btn btn-primary rounded-circle position-fixed"
-  style="bottom: 20px; right: 20px; width: 56px; height: 56px;" data-bs-toggle="modal" data-bs-target="#tanggalModal">
-  <i class="bi bi-calendar-event"></i>
+<!-- Tombol Persegi: Icon + Tanggal -->
+<button class="btn btn-primary position-fixed d-flex align-items-center gap-2 px-3 py-2 shadow"
+    style="bottom: 20px; right: 20px; z-index: 1050;"
+    data-bs-toggle="modal" data-bs-target="#tanggalModal">
+    <i class="bi bi-calendar-event"></i>
+    <span class="small">
+        @php
+            function tanggalIndo($tanggal) {
+                $bulan = [
+                    1 => 'Januari', 'Februari', 'Maret', 'April', 'Mei', 'Juni',
+                    'Juli', 'Agustus', 'September', 'Oktober', 'November', 'Desember'
+                ];
+                $date = \Carbon\Carbon::parse($tanggal);
+                return $date->format('d') . ' ' . $bulan[(int)$date->format('m')] . ' ' . $date->format('Y');
+            }
+        @endphp
+        {{ tanggalIndo(session('periode')) }}
+    </span>
 </button>
 
 <!-- Modal Pilih Tanggal -->
@@ -13,12 +27,14 @@
         <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Tutup"></button>
       </div>
       <div class="modal-body">
-        <form id="formTanggal">
-          <div class="mb-3">
-            <label for="tanggal" class="form-label">Tanggal Monitoring</label>
-            <input type="date" class="form-control" id="tanggal" name="tanggal" required>
-          </div>
-          <button type="submit" class="btn btn-primary">Terapkan</button>
+        <form id="formTanggal" action="{{ route('change_session_periode') }}" method="POST">
+            @csrf
+            <input type="hidden" name="_method" value="POST">
+            <div class="mb-3">
+                <label for="tanggal" class="form-label">Tanggal Monitoring</label>
+                <input type="date" class="form-control" id="tanggal" name="tanggal"
+                    value="{{ session('periode') ?? date('Y-m-d') }}" required onchange="this.form.submit()">
+            </div>
         </form>
       </div>
     </div>
