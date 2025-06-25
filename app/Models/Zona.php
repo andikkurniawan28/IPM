@@ -10,4 +10,8 @@ class Zona extends Model
     use HasFactory;
 
     protected $guarded = [];
+
+    public function titik_pengamatans(){
+        return $this->hasMany(TitikPengamatan::class);
+    }
 }

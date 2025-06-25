@@ -36,10 +36,10 @@
                 @enderror
             </div>
 
-            <div class="mb-3 form-check">
+            {{-- <div class="mb-3 form-check">
                 <input type="checkbox" name="remember" class="form-check-input" id="remember">
                 <label class="form-check-label small text-light" for="remember">Ingat Saya</label>
-            </div>
+            </div> --}}
 
             <div class="d-grid gap-2">
                 <button type="submit" class="btn btn-primary btn-sm">
