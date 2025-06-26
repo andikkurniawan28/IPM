@@ -18,8 +18,8 @@
                         <thead class="table-light">
                             <tr>
                                 <th>No</th>
-                                {{-- <th>Kode</th> --}}
                                 <th>Nama</th>
+                                <th>Izin</th>
                                 <th>Aksi</th>
                             </tr>
                         </thead>
@@ -56,6 +56,12 @@
                     {
                         data: 'nama',
                         name: 'nama'
+                    },
+                    {
+                        data: 'izin',
+                        name: 'izin',
+                        orderable: false,
+                        searchable: false
                     },
                     {
                         data: 'aksi',

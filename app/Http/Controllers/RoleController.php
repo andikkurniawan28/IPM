@@ -5,9 +5,21 @@ namespace App\Http\Controllers;
 use App\Models\Role;
 use Illuminate\Http\Request;
 use Yajra\DataTables\DataTables;
+use Illuminate\Support\Facades\Auth;
 
 class RoleController extends Controller
 {
+    public function __construct()
+    {
+        $this->middleware(function ($request, $next) {
+            if (!Auth::check() || !Auth::user()->role || !Auth::user()->role->izin_akses_master) {
+                return redirect()->back()->with('error', 'Anda tidak memiliki izin akses.');
+            }
+
+            return $next($request);
+        });
+    }
+
     public function index(Request $request)
     {
         if ($request->ajax()) {
@@ -27,7 +39,14 @@ class RoleController extends Controller
                         </form>
                     ';
                 })
-                ->rawColumns(['aksi'])
+                ->addColumn('izin', function ($row) {
+                    $input = $row->izin_akses_input ? '✅ Input' : '❌ Input';
+                    $laporan = $row->izin_akses_laporan ? '✅ Laporan' : '❌ Laporan';
+                    $master = $row->izin_akses_master ? '✅ Master' : '❌ Master';
+
+                    return implode('<br>', [$input, $laporan, $master]);
+                })
+                ->rawColumns(['aksi', 'izin'])
                 ->make(true);
         }
 
@@ -42,13 +61,16 @@ class RoleController extends Controller
     public function store(Request $request)
     {
         $validated = $request->validate([
-            // 'kode' => 'required|string|max:50|unique:roles,kode',
             'nama' => 'required|string|max:255|unique:roles,nama',
         ]);
 
+        $validated['izin_akses_input'] = $request->has('izin_akses_input');
+        $validated['izin_akses_laporan'] = $request->has('izin_akses_laporan');
+        $validated['izin_akses_master'] = $request->has('izin_akses_master');
+
         Role::create($validated);
 
-        return redirect()->route('role.index')->with('success', 'Kategori Parameter berhasil ditambahkan.');
+        return redirect()->route('role.index')->with('success', 'Role berhasil ditambahkan.');
     }
 
     public function edit(Role $role)
@@ -59,9 +81,12 @@ class RoleController extends Controller
     public function update(Request $request, Role $role)
     {
         $validated = $request->validate([
-            // 'kode' => 'required|string|max:50|unique:roles,kode,' . $role->id,
             'nama' => 'required|string|max:255|unique:roles,nama,' . $role->id,
         ]);
+
+        $validated['izin_akses_input'] = $request->has('izin_akses_input');
+        $validated['izin_akses_laporan'] = $request->has('izin_akses_laporan');
+        $validated['izin_akses_master'] = $request->has('izin_akses_master');
 
         $role->update($validated);
 

@@ -66,52 +66,62 @@
                     </ul>
                 </li>
 
-                <li class="nav-item dropdown">
-                    <a class="nav-link dropdown-toggle fw-semibold" href="#" id="transaksiMenu" role="button"
-                        data-bs-toggle="dropdown">
-                        <i class="bi bi-receipt"></i> Input
-                    </a>
-                    <ul class="dropdown-menu" aria-labelledby="transaksiMenu">
-                        <li><a class="dropdown-item" href="{{ route('monitoring.index') }}"><i class="bi bi-eye"></i>
-                                Monitoring</a></li>
-                    </ul>
-                </li>
+                {{-- MENU INPUT --}}
+                @if (auth()->check() && auth()->user()->role->izin_akses_input)
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle fw-semibold" href="#" id="transaksiMenu" role="button"
+                            data-bs-toggle="dropdown">
+                            <i class="bi bi-receipt"></i> Input
+                        </a>
+                        <ul class="dropdown-menu" aria-labelledby="transaksiMenu">
+                            <li>
+                                <a class="dropdown-item" href="{{ route('monitoring.index') }}">
+                                    <i class="bi bi-eye"></i> Monitoring
+                                </a>
+                            </li>
+                        </ul>
+                    </li>
+                @endif
 
-                <li class="nav-item dropdown">
-                    <a class="nav-link dropdown-toggle fw-semibold" href="#" id="laporanMenu" role="button"
-                        data-bs-toggle="dropdown">
-                        <i class="bi bi-bar-chart-line"></i> Laporan
-                    </a>
-                    <ul class="dropdown-menu" aria-labelledby="laporanMenu">
-                        <li><span class="dropdown-item text-muted"><i class="bi bi-clock-history"></i> Coming
-                                soon...</span></li>
-                    </ul>
-                </li>
+                {{-- MENU LAPORAN --}}
+                @if (auth()->check() && auth()->user()->role->izin_akses_laporan)
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle fw-semibold" href="#" id="laporanMenu" role="button"
+                            data-bs-toggle="dropdown">
+                            <i class="bi bi-bar-chart-line"></i> Laporan
+                        </a>
+                        <ul class="dropdown-menu" aria-labelledby="laporanMenu">
+                            <li>
+                                <span class="dropdown-item text-muted">
+                                    <i class="bi bi-clock-history"></i> Coming soon...
+                                </span>
+                            </li>
+                        </ul>
+                    </li>
+                @endif
 
-                <li class="nav-item dropdown">
-                    <a class="nav-link dropdown-toggle fw-semibold" href="#" id="masterMenu" role="button"
-                        data-bs-toggle="dropdown">
-                        <i class="bi bi-gear-fill"></i> Master
-                    </a>
-                    <ul class="dropdown-menu" aria-labelledby="masterMenu">
-                        <li><a class="dropdown-item" href="{{ route('kategori_parameter.index') }}"><i
-                                    class="bi bi-folder2-open"></i> Kategori Parameter</a></li>
-                        <li><a class="dropdown-item" href="{{ route('satuan.index') }}"><i class="bi bi-rulers"></i>
-                                Satuan</a></li>
-                        <li><a class="dropdown-item" href="{{ route('jenis_pilihan_kualitatif.index') }}"><i
-                                    class="bi bi-check-circle"></i> Jenis Pilihan Kualitatif</a></li>
-                        <li><a class="dropdown-item" href="{{ route('parameter.index') }}"><i
-                                    class="bi bi-graph-up"></i> Parameter</a></li>
-                        <li><a class="dropdown-item" href="{{ route('zona.index') }}"><i class="bi bi-map"></i> Zona</a>
-                        </li>
-                        <li><a class="dropdown-item" href="{{ route('titik_pengamatan.index') }}"><i
-                                    class="bi bi-geo-alt-fill"></i> Titik Pengamatan</a></li>
-                        <li><a class="dropdown-item" href="{{ route('role.index') }}"><i
-                                    class="bi bi-shield-lock-fill"></i> Role</a></li>
-                        <li><a class="dropdown-item" href="{{ route('user.index') }}"><i
-                                    class="bi bi-person-circle"></i> User</a></li>
-                    </ul>
-                </li>
+                {{-- MENU MASTER --}}
+                @if (auth()->check() && auth()->user()->role->izin_akses_master)
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle fw-semibold" href="#" id="masterMenu" role="button"
+                            data-bs-toggle="dropdown">
+                            <i class="bi bi-gear-fill"></i> Master
+                        </a>
+                        <ul class="dropdown-menu" aria-labelledby="masterMenu">
+                            <li><a class="dropdown-item" href="{{ route('kategori_parameter.index') }}"><i
+                                        class="bi bi-folder2-open"></i> Kategori Parameter</a></li>
+                            <li><a class="dropdown-item" href="{{ route('satuan.index') }}"><i class="bi bi-rulers"></i> Satuan</a></li>
+                            <li><a class="dropdown-item" href="{{ route('jenis_pilihan_kualitatif.index') }}"><i
+                                        class="bi bi-check-circle"></i> Jenis Pilihan Kualitatif</a></li>
+                            <li><a class="dropdown-item" href="{{ route('parameter.index') }}"><i class="bi bi-graph-up"></i> Parameter</a></li>
+                            <li><a class="dropdown-item" href="{{ route('zona.index') }}"><i class="bi bi-map"></i> Zona</a></li>
+                            <li><a class="dropdown-item" href="{{ route('titik_pengamatan.index') }}"><i class="bi bi-geo-alt-fill"></i> Titik Pengamatan</a></li>
+                            <li><a class="dropdown-item" href="{{ route('role.index') }}"><i class="bi bi-shield-lock-fill"></i> Role</a></li>
+                            <li><a class="dropdown-item" href="{{ route('user.index') }}"><i class="bi bi-person-circle"></i> User</a></li>
+                        </ul>
+                    </li>
+                @endif
+
 
             </ul>
 

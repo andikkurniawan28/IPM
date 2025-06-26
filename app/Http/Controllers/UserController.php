@@ -2,14 +2,26 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Satuan;
+use App\Models\Role;
 use App\Models\User;
+use App\Models\Satuan;
 use Illuminate\Http\Request;
 use Yajra\DataTables\DataTables;
-use App\Models\Role;
+use Illuminate\Support\Facades\Auth;
 
 class UserController extends Controller
 {
+    public function __construct()
+    {
+        $this->middleware(function ($request, $next) {
+            if (!Auth::check() || !Auth::user()->role || !Auth::user()->role->izin_akses_master) {
+                return redirect()->back()->with('error', 'Anda tidak memiliki izin akses.');
+            }
+
+            return $next($request);
+        });
+    }
+
     public function index(Request $request)
     {
         if ($request->ajax()) {

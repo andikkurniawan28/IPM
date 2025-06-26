@@ -2,12 +2,24 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\KategoriParameter;
 use Illuminate\Http\Request;
 use Yajra\DataTables\DataTables;
+use App\Models\KategoriParameter;
+use Illuminate\Support\Facades\Auth;
 
 class KategoriParameterController extends Controller
 {
+    public function __construct()
+    {
+        $this->middleware(function ($request, $next) {
+            if (!Auth::check() || !Auth::user()->role || !Auth::user()->role->izin_akses_master) {
+                return redirect()->back()->with('error', 'Anda tidak memiliki izin akses.');
+            }
+
+            return $next($request);
+        });
+    }
+
     public function index(Request $request)
     {
         if ($request->ajax()) {

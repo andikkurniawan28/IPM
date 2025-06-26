@@ -14,6 +14,29 @@
                         <input type="text" name="nama" id="nama" class="form-control" autofocus required>
                     </div>
 
+                    <div class="mb-3">
+                        <label class="form-label d-block">Izin Akses</label>
+
+                        <div class="form-check form-check-inline">
+                            <input class="form-check-input" type="checkbox" name="izin_akses_input" id="izin_akses_input"
+                                value="1" checked>
+                            <label class="form-check-label" for="izin_akses_input">Input</label>
+                        </div>
+
+                        <div class="form-check form-check-inline">
+                            <input class="form-check-input" type="checkbox" name="izin_akses_laporan"
+                                id="izin_akses_laporan" value="1" checked>
+                            <label class="form-check-label" for="izin_akses_laporan">Laporan</label>
+                        </div>
+
+                        <div class="form-check form-check-inline">
+                            <input class="form-check-input" type="checkbox" name="izin_akses_master" id="izin_akses_master"
+                                value="1" checked>
+                            <label class="form-check-label" for="izin_akses_master">Master</label>
+                        </div>
+                    </div>
+
+
                     {{-- <div class="mb-3">
                         <label for="kode" class="form-label">Kode</label>
                         <input type="text" name="kode" id="kode" class="form-control" required>
