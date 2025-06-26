@@ -8,6 +8,7 @@ use Illuminate\Support\Str;
 use Illuminate\Http\Request;
 use App\Models\TitikPengamatan;
 use Yajra\DataTables\DataTables;
+use App\Models\InputMonitoringLog;
 use Illuminate\Support\Facades\Auth;
 
 class MonitoringController extends Controller
@@ -105,15 +106,13 @@ class MonitoringController extends Controller
      */
     public function store(Request $request)
     {
-        // 1) Validasi dasar
         $request->validate([
             'periode'               => 'required|date',
             'jam'                   => 'required|date_format:H:i',
             'titik_pengamatan_id'   => 'required|exists:titik_pengamatans,id',
         ]);
 
-        // 2) Ambil seluruh parameter yang akan diproses
-        //    (misal, kamu sudah punya koleksi $parameters yg dipassing ke view)
+        // Ambil parameter dari form
         $allParamIds = collect($request->all())
             ->keys()
             ->filter(fn($k) => Str::startsWith($k, 'param'))
@@ -121,44 +120,56 @@ class MonitoringController extends Controller
             ->all();
 
         $parameters = Parameter::whereIn('id', $allParamIds)
-            ->pluck('jenis', 'id'); // ['1'=>'kuantitatif', '2'=>'kualitatif', ...]
+            ->pluck('nama', 'id'); // ambil nama parameter, contoh ['1' => 'pH', '2' => 'Suhu']
 
-        // 3) Kondisi unik untuk updateOrCreate
         $conditions = [
             'periode'             => $request->periode,
             'jam'                 => $request->jam,
             'titik_pengamatan_id' => $request->titik_pengamatan_id,
         ];
 
-        // 4) Bangun data untuk disimpan
         $dataToSave = [];
+
         foreach ($request->all() as $key => $value) {
             if (Str::startsWith($key, 'param')) {
                 $paramId = (int) Str::after($key, 'param');
-                $jenis   = $parameters->get($paramId);
 
-                if ($jenis === 'kuantitatif') {
-                    // cast angka
-                    $dataToSave[$key] = $value !== null && $value !== ''
-                        ? floatval($value)
-                        : null;
-                } else {
-                    // simpan string (boleh kosong)
-                    $dataToSave[$key] = $value !== null && $value !== ''
-                        ? $value
-                        : null;
-                }
+                $finalValue = $value !== null && $value !== ''
+                    ? $value
+                    : null;
+
+                $dataToSave[$key] = $finalValue;
             }
         }
 
-        // 5) Create or update
-        Monitoring::updateOrCreate($conditions, $dataToSave);
+        // Simpan atau perbarui
+        $monitoring = Monitoring::updateOrCreate($conditions, $dataToSave);
+
+        // Simpan log untuk setiap parameter yang diinput (tidak null)
+        $logs = [];
+
+        foreach ($request->all() as $key => $value) {
+            if (Str::startsWith($key, 'param') && $value !== null && $value !== '') {
+                $paramId   = (int) Str::after($key, 'param');
+                $namaParam = $parameters->get($paramId, 'Tidak diketahui');
+
+                $logs[] = "Input $namaParam dengan nilai: $value";
+            }
+        }
+
+        // Jika ada yang diinput, simpan ke log
+        if (!empty($logs)) {
+            InputMonitoringLog::create([
+                'user_id'       => auth()->id(),
+                'monitoring_id' => $monitoring->id,
+                'keterangan'    => implode('; ', $logs),
+            ]);
+        }
 
         return redirect()
             ->route('monitoring.index')
             ->with('success', 'Data monitoring berhasil disimpan atau diperbarui.');
     }
-
 
     /**
      * Display the specified resource.
@@ -233,6 +244,41 @@ class MonitoringController extends Controller
                         : null;
                 }
             }
+        }
+
+        // Logging
+        $logs = [];
+
+        foreach ($request->all() as $key => $value) {
+            if (Str::startsWith($key, 'param')) {
+                $id    = (int) Str::after($key, 'param');
+                $jenis = $jenisMap->get($id);
+                $paramName = Parameter::find($id)?->nama ?? 'Unknown';
+
+                $newValue = $jenis === 'kuantitatif'
+                    ? ($value !== null && $value !== '' ? floatval($value) : null)
+                    : ($value !== null && $value !== '' ? $value : null);
+
+                // Ambil nilai lama
+                $oldValue = $monitoring->{$key};
+
+                // Masukkan ke data update
+                $data[$key] = $newValue;
+
+                // Jika nilai berubah, masukkan ke log
+                if ($newValue !== $oldValue) {
+                    $logs[] = "Update $paramName dari $oldValue ke $newValue";
+                }
+            }
+        }
+
+        // Simpan log jika ada perubahan
+        if (!empty($logs)) {
+            InputMonitoringLog::create([
+                'user_id'       => auth()->id(),
+                'monitoring_id' => $monitoring->id,
+                'keterangan'    => implode('; ', $logs), // atau pakai newline jika ingin
+            ]);
         }
 
         // 7) Update record

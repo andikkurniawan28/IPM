@@ -14,4 +14,8 @@ class Monitoring extends Model
     public function titik_pengamatan(){
         return $this->belongsTo(TitikPengamatan::class);
     }
+
+    public function input_monitoring_log(){
+        return $this->hasMany(InputMonitoringLog::class);
+    }
 }

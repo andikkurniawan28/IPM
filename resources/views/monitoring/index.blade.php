@@ -17,7 +17,7 @@
                     <table id="monitoringTable" class="table table-bordered table-hover table-sm w-100">
                         <thead class="table-light">
                             <tr>
-                                <th>No</th>
+                                <th>ID</th>
                                 <th>Periode</th>
                                 <th>Jam</th>
                                 <th>Kode</th>
@@ -48,13 +48,12 @@
                 serverSide: true,
                 ajax: "{{ route('monitoring.index') }}",
                 order: [
-                    [1, 'asc']
+                    [0, 'desc']
                 ],
-                columns: [{
-                        data: 'DT_RowIndex',
-                        name: 'DT_RowIndex',
-                        orderable: false,
-                        searchable: false
+                columns: [
+                    {
+                        data: 'id',
+                        name: 'id'
                     },
                     {
                         data: 'periode',

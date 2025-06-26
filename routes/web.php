@@ -7,6 +7,7 @@ use App\Http\Controllers\UserController;
 use App\Http\Controllers\ZonaController;
 use App\Http\Controllers\SatuanController;
 use App\Http\Controllers\DashboardController;
+use App\Http\Controllers\InputMonitoringLogController;
 use App\Http\Controllers\JenisPilihanKualitatifController;
 use App\Http\Controllers\ParameterController;
 use App\Http\Controllers\MonitoringController;
@@ -53,3 +54,4 @@ Route::get('/monitoring_per_zona/data/{zona_parameter_id}', [MonitoringPerZonaCo
 Route::get('/monitoring_all', [MonitoringAllController::class, 'index'])->name('monitoring_all')->middleware(['auth']);
 Route::get('/monitoring_per_titik/{titik_pengamatan_id}', [MonitoringPerTitikController::class, 'index'])->name('monitoring_per_titik.index')->middleware(['auth']);
 Route::get('/monitoring_per_titik/data/{titik_pengamatan_id}', [MonitoringPerTitikController::class, 'data'])->name('monitoring_per_titik.data');
+Route::get('/input_monitoring_log', [InputMonitoringLogController::class, 'index'])->name('input_monitoring_log')->middleware(['auth']);

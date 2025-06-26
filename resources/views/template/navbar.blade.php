@@ -78,6 +78,9 @@
                                 <a class="dropdown-item" href="{{ route('monitoring.index') }}">
                                     <i class="bi bi-eye"></i> Monitoring
                                 </a>
+                                <a class="dropdown-item" href="{{ route('input_monitoring_log') }}">
+                                    <i class="bi bi-clock-history"></i> Input Log
+                                </a>
                             </li>
                         </ul>
                     </li>
