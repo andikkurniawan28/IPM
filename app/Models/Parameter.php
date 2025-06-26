@@ -22,15 +22,25 @@ class Parameter extends Model
         return $this->belongsTo(Satuan::class);
     }
 
+    public function pilihan_kualitatifs(){
+        return $this->hasMany(PilihanKualitatif::class);
+    }
+
     protected static function booted()
     {
-        static::created(function ($model) {
-            $parameterId = $model->id;
-            $columnName = "param{$parameterId}";
-
-            if (!Schema::hasColumn('monitorings', $columnName)) {
-                Schema::table('monitorings', function (Blueprint $table) use ($columnName) {
-                    $table->float($columnName)->nullable()->after('updated_at');
+        static::created(function (Parameter $parameter) {
+            $column = 'param' . $parameter->id;
+            if (! Schema::hasColumn('monitorings', $column)) {
+                Schema::table('monitorings', function (Blueprint $table) use ($column, $parameter) {
+                    if ($parameter->jenis === 'kuantitatif') {
+                        $table->float($column)
+                              ->nullable()
+                              ->after('updated_at');
+                    } else {
+                        $table->string($column)
+                              ->nullable()
+                              ->after('updated_at');
+                    }
                 });
             }
         });

@@ -4,8 +4,8 @@
     <div class="container-fluid py-0 px-6">
 
         <div class="d-flex justify-content-between align-items-center mb-3">
-            <h4>Daftar Input Monitoring</h4>
-            <a href="{{ route('monitoring.create') }}" class="btn btn-primary">
+            <h4>Daftar Jenis Pilihan Kualitatif</h4>
+            <a href="{{ route('jenis_pilihan_kualitatif.create') }}" class="btn btn-primary">
                 <i class="bi bi-plus-circle"></i> Tambah
             </a>
         </div>
@@ -13,17 +13,12 @@
         <div class="card shadow-sm bg-light">
             <div class="card-body">
                 <div class="table-responsive">
-
-                    <table id="monitoringTable" class="table table-bordered table-hover table-sm w-100">
+                    <table id="jenis_pilihan_kualitatifTable" class="table table-bordered table-hover table-sm w-100">
                         <thead class="table-light">
                             <tr>
                                 <th>No</th>
-                                <th>Periode</th>
-                                <th>Jam</th>
-                                <th>Kode</th>
-                                <th>Titik Pengamatan</th>
-                                <th>Nilai</th>
-                                {{-- <th>Keterangan</th> --}}
+                                {{-- <th>Kode</th> --}}
+                                <th>Keterangan</th>
                                 <th>Aksi</th>
                             </tr>
                         </thead>
@@ -43,10 +38,10 @@
 
     <script>
         $(function() {
-            $('#monitoringTable').DataTable({
+            $('#jenis_pilihan_kualitatifTable').DataTable({
                 processing: true,
                 serverSide: true,
-                ajax: "{{ route('monitoring.index') }}",
+                ajax: "{{ route('jenis_pilihan_kualitatif.index') }}",
                 order: [
                     [1, 'asc']
                 ],
@@ -56,28 +51,11 @@
                         orderable: false,
                         searchable: false
                     },
+                    // { data: 'kode', name: 'kode' },
                     {
-                        data: 'periode',
-                        name: 'periode'
+                        data: 'keterangan',
+                        name: 'keterangan'
                     },
-                    {
-                        data: 'jam',
-                        name: 'jam'
-                    },
-                    {
-                        data: 'titik_pengamatan.kode',
-                        name: 'titik_pengamatan.kode'
-                    },
-                    {
-                        data: 'titik_pengamatan.nama',
-                        name: 'titik_pengamatan.nama'
-                    },
-                    {
-                        data: 'parameter',
-                        name: 'parameter'
-                    },
-                    // { data: 'satuan_nama', name: 'satuan_nama' },
-                    // { data: 'keterangan', name: 'keterangan' },
                     {
                         data: 'aksi',
                         name: 'aksi',

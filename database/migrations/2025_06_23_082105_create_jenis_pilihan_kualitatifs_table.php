@@ -11,12 +11,9 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('roles', function (Blueprint $table) {
+        Schema::create('jenis_pilihan_kualitatifs', function (Blueprint $table) {
             $table->id();
-            $table->string('nama')->unique();
-            $table->boolean('izin_akses_input')->default(1);
-            $table->boolean('izin_akses_laporan')->default(1);
-            $table->boolean('izin_akses_master')->default(1);
+            $table->string('keterangan');
             $table->timestamp('created_at')->useCurrent();
             $table->timestamp('updated_at')->useCurrent()->useCurrentOnUpdate();
         });
@@ -27,6 +24,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('roles');
+        Schema::dropIfExists('jenis_pilihan_kualitatifs');
     }
 };

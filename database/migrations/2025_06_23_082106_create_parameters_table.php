@@ -14,10 +14,20 @@ return new class extends Migration
         Schema::create('parameters', function (Blueprint $table) {
             $table->id();
             $table->foreignId('kategori_parameter_id')->constrained();
-            $table->foreignId('satuan_id')->constrained();
-            $table->string('nama')->unique();
-            $table->string('simbol');
+
+            // Boleh kosong jika jenis = 'kualitatif'
+            $table->foreignId('satuan_id')->nullable()->constrained();
+
+            $table->string('nama')->unique(); // Nama parameter (misalnya: "Tekanan")
+            $table->string('simbol'); // Selalu diisi, untuk tampilan tabel (misalnya: "TK", "AKT")
+
+            $table->enum('jenis', ['kuantitatif', 'kualitatif'])->default('kuantitatif');
+
+            // Hanya berlaku untuk kuantitatif
+            $table->enum('metode_agregasi', ['sum', 'avg', 'count'])->nullable();
+
             $table->text('keterangan')->nullable();
+
             $table->timestamp('created_at')->useCurrent();
             $table->timestamp('updated_at')->useCurrent()->useCurrentOnUpdate();
         });

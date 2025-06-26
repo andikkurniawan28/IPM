@@ -20,9 +20,12 @@
                                 <th>No</th>
                                 <th>Nama</th>
                                 <th>Simbol</th>
+                                <th>Jenis</th>
                                 <th>Kategori</th>
                                 <th>Satuan</th>
                                 <th>Keterangan</th>
+                                <th>Metode</th>
+                                <th>Pilihan</th>
                                 <th>Aksi</th>
                             </tr>
                         </thead>
@@ -64,6 +67,10 @@
                         name: 'simbol'
                     },
                     {
+                        data: 'jenis',
+                        name: 'jenis'
+                    },
+                    {
                         data: 'kategori_parameter.nama',
                         name: 'kategori_parameter.nama'
                     },
@@ -74,6 +81,16 @@
                     {
                         data: 'keterangan',
                         name: 'keterangan'
+                    },
+                    {
+                        data: 'metode_agregasi',
+                        name: 'metode_agregasi'
+                    },
+                    {
+                        data: 'pilihan',
+                        name: 'pilihan',
+                        orderable: false,
+                        searchable: false
                     },
                     {
                         data: 'aksi',

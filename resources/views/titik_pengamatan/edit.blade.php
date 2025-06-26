@@ -61,7 +61,7 @@
                                             {{ in_array($parameter->id, $titik_pengamatan->parameter_titik_pengamatans->pluck('parameter_id')->toArray()) ? 'checked' : '' }}
                                         >
                                         <label class="form-check-label" for="parameter_{{ $parameter->id }}">
-                                            {{ $parameter->nama }} <sub>({{ $parameter->satuan->simbol }})</sub>
+                                            {{ $parameter->nama }} <sub>({{ $parameter->satuan->simbol ?? '' }})</sub>
                                         </label>
                                     </div>
                                 </div>

@@ -53,8 +53,9 @@
                             col.innerHTML = `
                                 <div class="card bg-light shadow-sm h-100">
                                     <div class="card-body">
-                                        <h5 class="card-title text-dark">${tp.nama}</h5>
-                                        <p class="card-text"><small>@${tp.zona?.nama}</small></p>
+                                        <a href="/monitoring_per_titik/${tp.id}">
+                                            <h5 class="card-title text-dark">${tp.kode}| ${tp.nama}</h5>
+                                        </a>
                                         <div class="table-responsive">
                                             <table class="table table-bordered table-sm mb-0">
                                                 <thead class="table-secondary">

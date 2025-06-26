@@ -56,6 +56,7 @@ class MonitoringPerZonaController extends Controller
 
             return [
                 'id' => $titik->id,
+                'kode' => $titik->kode,
                 'nama' => $titik->nama,
                 'zona' => $titik->zona,
                 'parameters' => $parameterList->values(),

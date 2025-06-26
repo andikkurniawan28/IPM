@@ -2,6 +2,7 @@
 
 namespace Database\Seeders;
 
+use App\Models\JenisPilihanKualitatif;
 use App\Models\Role;
 use App\Models\User;
 use App\Models\Zona;
@@ -105,6 +106,48 @@ class DatabaseSeeder extends Seeder
             ['nama' => 'Konsentrasi', 'simbol' => 'mol/L'],
         ]);
 
+        JenisPilihanKualitatif::insert([
+            // Untuk parameter_id 1 → status mesin
+            ['keterangan' => 'Aktif'],
+            ['keterangan' => 'Nonaktif'],
+
+            // Untuk parameter_id 2 → konfirmasi
+            ['keterangan' => 'Ya'],
+            ['keterangan' => 'Tidak'],
+
+            // Untuk parameter_id 3 → kondisi umum
+            ['keterangan' => 'Baik'],
+            ['keterangan' => 'Cukup'],
+            ['keterangan' => 'Buruk'],
+
+            // Untuk parameter_id 4 → level
+            ['keterangan' => 'Rendah'],
+            ['keterangan' => 'Sedang'],
+            ['keterangan' => 'Tinggi'],
+
+            // Untuk parameter_id 5 → warna indikator
+            ['keterangan' => 'Hijau'],
+            ['keterangan' => 'Kuning'],
+            ['keterangan' => 'Merah'],
+
+            // Untuk parameter_id 6 → mode kerja
+            ['keterangan' => 'Manual'],
+            ['keterangan' => 'Otomatis'],
+
+            // Untuk parameter_id 7 → validasi
+            ['keterangan' => 'Valid'],
+            ['keterangan' => 'Tidak Valid'],
+
+            // Untuk parameter_id 8 → keputusan
+            ['keterangan' => 'Disetujui'],
+            ['keterangan' => 'Ditolak'],
+            ['keterangan' => 'Revisi'],
+
+            // Untuk parameter_id 9 → koneksi
+            ['keterangan' => 'Terkoneksi'],
+            ['keterangan' => 'Tidak Terkoneksi'],
+        ]);
+
         // Simpan id kategori dan satuan
         $kategori = KategoriParameter::pluck('id', 'nama');
         $satuan = Satuan::pluck('id', 'simbol');
@@ -116,49 +159,56 @@ class DatabaseSeeder extends Seeder
                 'kategori_parameter_id' => $kategori['Peralatan'],
                 'satuan_id' => $satuan['RPM'],
                 'simbol' => 'Rpm',
-                'keterangan' => 'Kecepatan putaran peralatan dalam satuan RPM.'
+                'keterangan' => 'Kecepatan putaran peralatan dalam satuan RPM.',
+                'metode_agregasi' => 'avg',
             ],
             [
                 'nama' => 'Electric Current',
                 'kategori_parameter_id' => $kategori['Peralatan'],
                 'satuan_id' => $satuan['A'],
                 'simbol' => 'Amp',
-                'keterangan' => 'Besarnya arus listrik pada peralatan.'
+                'keterangan' => 'Besarnya arus listrik pada peralatan.',
+                'metode_agregasi' => 'avg',
             ],
             [
                 'nama' => 'Voltage',
                 'kategori_parameter_id' => $kategori['Peralatan'],
                 'satuan_id' => $satuan['V'],
                 'simbol' => 'Volt',
-                'keterangan' => 'Tegangan kerja sistem atau alat.'
+                'keterangan' => 'Tegangan kerja sistem atau alat.',
+                'metode_agregasi' => 'avg',
             ],
             [
                 'nama' => 'Pressure',
                 'kategori_parameter_id' => $kategori['Peralatan'],
                 'satuan_id' => $satuan['bar'],
                 'simbol' => 'Press',
-                'keterangan' => 'Tekanan sistem dalam satuan bar.'
+                'keterangan' => 'Tekanan sistem dalam satuan bar.',
+                'metode_agregasi' => 'avg',
             ],
             [
                 'nama' => 'Temperature',
                 'kategori_parameter_id' => $kategori['Peralatan'],
                 'satuan_id' => $satuan['°C'],
                 'simbol' => 'Temp',
-                'keterangan' => 'Suhu pengamatan dalam satuan derajat Celsius.'
+                'keterangan' => 'Suhu pengamatan dalam satuan derajat Celsius.',
+                'metode_agregasi' => 'avg',
             ],
             [
                 'nama' => 'Product Count',
                 'kategori_parameter_id' => $kategori['Produksi'],
                 'satuan_id' => $satuan['unit'],
                 'simbol' => 'Qty',
-                'keterangan' => 'Jumlah unit produk yang dihasilkan.'
+                'keterangan' => 'Jumlah unit produk yang dihasilkan.',
+                'metode_agregasi' => 'sum',
             ],
             [
                 'nama' => 'Flow',
                 'kategori_parameter_id' => $kategori['Produksi'],
                 'satuan_id' => $satuan['m³/h'],
                 'simbol' => 'flow',
-                'keterangan' => 'Jumlah aliran.'
+                'keterangan' => 'Jumlah aliran.',
+                'metode_agregasi' => 'sum',
             ]
         ];
 

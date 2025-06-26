@@ -98,6 +98,8 @@
                                     class="bi bi-folder2-open"></i> Kategori Parameter</a></li>
                         <li><a class="dropdown-item" href="{{ route('satuan.index') }}"><i class="bi bi-rulers"></i>
                                 Satuan</a></li>
+                        <li><a class="dropdown-item" href="{{ route('jenis_pilihan_kualitatif.index') }}"><i
+                                    class="bi bi-check-circle"></i> Jenis Pilihan Kualitatif</a></li>
                         <li><a class="dropdown-item" href="{{ route('parameter.index') }}"><i
                                     class="bi bi-graph-up"></i> Parameter</a></li>
                         <li><a class="dropdown-item" href="{{ route('zona.index') }}"><i class="bi bi-map"></i> Zona</a>

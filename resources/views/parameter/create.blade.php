@@ -1,54 +1,92 @@
 @extends('template.master')
 
 @section('content')
-    <div class="container-fluid py-0 px-6">
+    <div class="container-fluid py-4 px-6">
         <h4 class="mb-4">Tambah Parameter</h4>
-
         <div class="card shadow-sm bg-light">
             <div class="card-body">
                 <form action="{{ route('parameter.store') }}" method="POST">
                     @csrf
+                    <div class="row g-3">
+                        <!-- Nama & Simbol -->
+                        <div class="col-md-6">
+                            <label class="form-label">Nama</label>
+                            <input name="nama" class="form-control" required autofocus>
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label">Simbol</label>
+                            <input name="simbol" class="form-control" required>
+                        </div>
 
-                    <div class="mb-3">
-                        <label for="nama" class="form-label">Nama Parameter</label>
-                        <input type="text" name="nama" id="nama" class="form-control" autofocus required>
+                        <!-- Kategori & Jenis -->
+                        <div class="col-md-4">
+                            <label class="form-label">Kategori</label>
+                            <select name="kategori_parameter_id" id="kategori_parameter_id" class="form-select" required>
+                                <option disabled selected>-- Pilih Kategori --</option>
+                                @foreach ($kategori_parameters as $k)
+                                    <option value="{{ $k->id }}">{{ $k->nama }}</option>
+                                @endforeach
+                            </select>
+                        </div>
+                        <div class="col-md-4 d-flex align-items-center">
+                            <label class="me-2 mb-0">Jenis</label>
+                            <div class="form-check form-switch">
+                                <input class="form-check-input" type="checkbox" id="jenisSwitch" name="jenis"
+                                    value="kualitatif">
+                                <label class="form-check-label" for="jenisSwitch" id="jenisLabel">Kuantitatif</label>
+                            </div>
+                        </div>
+
+                        <!-- Satuan & Agregasi -->
+                        <div class="col-md-4" id="satuan-group">
+                            <label class="form-label">Satuan</label>
+                            <select name="satuan_id" id="satuan_id" class="form-select" required>
+                                <option disabled selected>-- Pilih Satuan --</option>
+                                @foreach ($satuans as $s)
+                                    <option value="{{ $s->id }}">{{ $s->nama }} ({{ $s->simbol }})</option>
+                                @endforeach
+                            </select>
+                        </div>
+                        <div class="col-md-4" id="agregasi-group">
+                            <label class="form-label">Agregasi</label>
+                            <select name="metode_agregasi" class="form-select" required>
+                                <option disabled selected>-- Pilih Metode Agregasi --</option>
+                                <option value="sum">Sum</option>
+                                <option value="avg">Avg</option>
+                                <option value="count">Count</option>
+                            </select>
+                        </div>
+
+                        <!-- Pilihan Kualitatif sebagai checkbox -->
+                        <div class="col-md-12" id="kualitatif-group" style="display:none;">
+                            <label class="form-label d-block">Jenis Pilihan Kualitatif</label>
+                            <div class="row">
+                                @foreach ($jenis_pilihan_kualitatifs as $p)
+                                    <div class="col-md-4">
+                                        <div class="form-check">
+                                            <input class="form-check-input" type="checkbox" name="pilihan_kualitatif[]"
+                                                id="pilihan{{ $p->id }}" value="{{ $p->id }}">
+                                            <label class="form-check-label" for="pilihan{{ $p->id }}">
+                                                {{ $p->keterangan }}
+                                            </label>
+                                        </div>
+                                    </div>
+                                @endforeach
+                            </div>
+                        </div>
+
+                        <!-- Keterangan -->
+                        <div class="col-12">
+                            <label class="form-label">Keterangan</label>
+                            <textarea name="keterangan" class="form-control" rows="2"></textarea>
+                        </div>
+
+                        <!-- Tombol -->
+                        <div class="col-12 text-end">
+                            <button class="btn btn-primary"><i class="bi bi-save"></i> Simpan</button>
+                            <a href="{{ route('parameter.index') }}" class="btn btn-secondary">Kembali</a>
+                        </div>
                     </div>
-
-                    <div class="mb-3">
-                        <label for="simbol" class="form-label">Simbol</label>
-                        <input type="text" name="simbol" id="simbol" class="form-control" required>
-                    </div>
-
-                    <div class="mb-3">
-                        <label for="kategori_parameter_id" class="form-label">Kategori</label>
-                        <select name="kategori_parameter_id" id="kategori_parameter_id" class="form-select" width="100%"
-                            required>
-                            <option value="" disabled selected>-- Pilih Kategori --</option>
-                            @foreach ($kategori_parameters as $kategori)
-                                <option value="{{ $kategori->id }}">{{ $kategori->nama }}</option>
-                            @endforeach
-                        </select>
-                    </div>
-
-                    <div class="mb-3">
-                        <label for="satuan_id" class="form-label">Satuan</label>
-                        <select name="satuan_id" id="satuan_id" class="form-select" width="100%" required>
-                            <option value="" disabled selected>-- Pilih Satuan --</option>
-                            @foreach ($satuans as $satuan)
-                                <option value="{{ $satuan->id }}">{{ $satuan->nama }} ({{ $satuan->simbol }})</option>
-                            @endforeach
-                        </select>
-                    </div>
-
-                    <div class="mb-3">
-                        <label for="keterangan" class="form-label">Keterangan</label>
-                        <textarea name="keterangan" id="keterangan" class="form-control" rows="3"></textarea>
-                    </div>
-
-                    <button type="submit" class="btn btn-primary">
-                        <i class="bi bi-save"></i> Simpan
-                    </button>
-                    <a href="{{ route('parameter.index') }}" class="btn btn-secondary">Kembali</a>
                 </form>
             </div>
         </div>
@@ -56,21 +94,38 @@
 @endsection
 
 @section('scripts')
-    {{-- Select2 JS & CSS --}}
+    <!-- jQuery & Select2 -->
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
     <link href="https://cdn.jsdelivr.net/npm/@ttskch/select2-bootstrap4-theme@1.5.2/dist/select2-bootstrap4.min.css"
         rel="stylesheet" />
-
     <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
 
     <script>
-        $(document).ready(function() {
+        $(function() {
+            // Initialize Select2
             $('#kategori_parameter_id, #satuan_id').select2({
                 theme: 'bootstrap4',
                 placeholder: '-- Pilih --',
-                allowClear: true
+                allowClear: true,
+                width: '100%'
             });
+
+            // Toggle logic
+            function toggle() {
+                const isKual = $('#jenisSwitch').is(':checked');
+                $('#jenisLabel').text(isKual ? 'Kualitatif' : 'Kuantitatif');
+                $('#satuan-group, #agregasi-group')
+                    .toggle(!isKual)
+                    .find('select').prop('required', !isKual);
+                $('#kualitatif-group')
+                    .toggle(isKual)
+                    .find('input[type=checkbox]')
+                    .prop('disabled', !isKual)
+                    .prop('checked', false);
+            }
+
+            $('#jenisSwitch').change(toggle).trigger('change');
         });
     </script>
 @endsection

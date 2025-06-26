@@ -7,13 +7,15 @@ use App\Models\Parameter;
 use Illuminate\Http\Request;
 use Yajra\DataTables\DataTables;
 use App\Models\KategoriParameter;
+use App\Models\PilihanKualitatif;
+use App\Models\JenisPilihanKualitatif;
 
 class ParameterController extends Controller
 {
     public function index(Request $request)
     {
         if ($request->ajax()) {
-            $data = Parameter::with(['kategori_parameter', 'satuan']); // eager load relasi
+            $data = Parameter::with(['kategori_parameter', 'satuan', 'pilihan_kualitatifs.jenis_pilihan_kualitatif']); // eager load relasi
 
             return DataTables::of($data)
                 ->addIndexColumn()
@@ -37,8 +39,22 @@ class ParameterController extends Controller
                     </form>
                 ';
                 })
-                ->rawColumns(['aksi', 'satuan_nama'])
+                ->addColumn('pilihan', function($row) {
+                    if ($row->jenis === 'kualitatif' && $row->pilihan_kualitatifs->isNotEmpty()) {
+                        $html = '<ul class="mb-0 ps-3">';
+                        foreach ($row->pilihan_kualitatifs as $pil) {
+                            $keterangan = $pil->jenis_pilihan_kualitatif->keterangan ?? $pil->jenis_pilihan_kualitatif_id;
+                            $html .= '<li>' . e($keterangan) . '</li>';
+                        }
+                        $html .= '</ul>';
+                        return $html;
+                    }
+                    return '-';
+                })
+                ->rawColumns(['aksi', 'satuan_nama', 'pilihan'])
                 ->make(true);
+
+        // return $data;
         }
 
         return view('parameter.index');
@@ -52,6 +68,7 @@ class ParameterController extends Controller
         return view('parameter.create', [
             'kategori_parameters' => KategoriParameter::all(),
             'satuans' => Satuan::all(),
+            'jenis_pilihan_kualitatifs' => JenisPilihanKualitatif::all(),
         ]);
     }
 
@@ -60,19 +77,48 @@ class ParameterController extends Controller
      */
     public function store(Request $request)
     {
-        $validated = $request->validate([
-            'nama' => 'required|string|max:255',
-            'simbol' => 'required|string|max:50',
-            'kategori_parameter_id' => 'required|exists:kategori_parameters,id',
-            'satuan_id' => 'required|exists:satuans,id',
-            'keterangan' => 'nullable|string',
+        // 0) Beri default jika tidak dikirim
+        $request->merge([
+            'jenis' => $request->input('jenis', 'kuantitatif')
         ]);
 
-        // return $validated;
+        // 1) Validasi
+        $data = $request->validate([
+            'nama'                  => 'required|string|unique:parameters,nama',
+            'simbol'                => 'required|string|unique:parameters,simbol',
+            'kategori_parameter_id' => 'required|exists:kategori_parameters,id',
+            'jenis'                 => 'required|in:kuantitatif,kualitatif',
+            'satuan_id'             => 'nullable|required_if:jenis,kuantitatif|exists:satuans,id',
+            'metode_agregasi'       => 'nullable|required_if:jenis,kuantitatif|in:sum,avg,count',
+            'pilihan_kualitatif'    => 'nullable|array',
+            'pilihan_kualitatif.*'  => 'exists:jenis_pilihan_kualitatifs,id',
+            'keterangan'            => 'nullable|string',
+        ]);
 
-        Parameter::create($validated);
+        // 2) Buat Parameter
+        $param = Parameter::create([
+            'nama'                  => $data['nama'],
+            'simbol'                => $data['simbol'],
+            'kategori_parameter_id' => $data['kategori_parameter_id'],
+            'jenis'                 => $data['jenis'],
+            'satuan_id'             => $data['jenis'] === 'kuantitatif' ? $data['satuan_id'] : null,
+            'metode_agregasi'       => $data['jenis'] === 'kuantitatif' ? $data['metode_agregasi'] : null,
+            'keterangan'            => $data['keterangan'] ?? null,
+        ]);
 
-        return redirect()->route('parameter.index')->with('success', 'Parameter berhasil ditambahkan.');
+        // 4) Jika KUALITATIF → Simpan pilihan di pivot
+        if ($param->jenis === 'kualitatif' && !empty($data['pilihan_kualitatif'])) {
+            foreach ($data['pilihan_kualitatif'] as $jenisPilId) {
+                PilihanKualitatif::create([
+                    'parameter_id'               => $param->id,
+                    'jenis_pilihan_kualitatif_id' => $jenisPilId,
+                ]);
+            }
+        }
+
+        return redirect()
+            ->route('parameter.index')
+            ->with('success', 'Parameter berhasil ditambahkan.');
     }
 
     /**
@@ -88,10 +134,16 @@ class ParameterController extends Controller
      */
     public function edit(Parameter $parameter)
     {
+        $selectedPilihan = $parameter
+            ->pilihan_kualitatifs
+            ->pluck('jenis_pilihan_kualitatif_id')
+            ->toArray();
         return view('parameter.edit', [
             'parameter' => $parameter,
             'kategori_parameters' => KategoriParameter::all(),
             'satuans' => Satuan::all(),
+            'jenis_pilihan_kualitatifs' => JenisPilihanKualitatif::all(),
+            'selectedPilihan' => $selectedPilihan,
         ]);
     }
 
@@ -100,17 +152,46 @@ class ParameterController extends Controller
      */
     public function update(Request $request, Parameter $parameter)
     {
-        $validated = $request->validate([
-            'nama' => 'required|string|max:255',
-            'simbol' => 'required|string|max:50',
+        // 1) Validasi input, pastikan `jenis` wajib
+        $data = $request->validate([
+            'nama'                  => 'required|string|max:255|unique:parameters,nama,' . $parameter->id,
+            'simbol'                => 'required|string|max:50|unique:parameters,simbol,' . $parameter->id,
             'kategori_parameter_id' => 'required|exists:kategori_parameters,id',
-            'satuan_id' => 'required|exists:satuans,id',
-            'keterangan' => 'nullable|string',
+            'jenis'                 => 'required|in:kuantitatif,kualitatif',
+            'satuan_id'             => 'nullable|required_if:jenis,kuantitatif|exists:satuans,id',
+            'metode_agregasi'       => 'nullable|required_if:jenis,kuantitatif|in:sum,avg,count',
+            'keterangan'            => 'nullable|string',
+            'pilihan_kualitatif'    => 'nullable|array',
+            'pilihan_kualitatif.*'  => 'exists:jenis_pilihan_kualitatifs,id',
         ]);
 
-        $parameter->update($validated);
+        // 2) Update main record
+        $parameter->update([
+            'nama'                  => $data['nama'],
+            'simbol'                => $data['simbol'],
+            'kategori_parameter_id' => $data['kategori_parameter_id'],
+            'jenis'                 => $data['jenis'],
+            'satuan_id'             => $data['jenis'] === 'kuantitatif' ? $data['satuan_id'] : null,
+            'metode_agregasi'       => $data['jenis'] === 'kuantitatif' ? $data['metode_agregasi'] : null,
+            'keterangan'            => $data['keterangan'] ?? null,
+        ]);
 
-        return redirect()->route('parameter.index')->with('success', 'Parameter berhasil diperbarui.');
+        // 3) Reset PilihanKualitatif pivot
+        PilihanKualitatif::where('parameter_id', $parameter->id)->delete();
+
+        // 4) Re-insert pilihan hanya jika kualitatif
+        if ($data['jenis'] === 'kualitatif' && !empty($data['pilihan_kualitatif'])) {
+            foreach ($data['pilihan_kualitatif'] as $idPil) {
+                PilihanKualitatif::create([
+                    'parameter_id'                => $parameter->id,
+                    'jenis_pilihan_kualitatif_id' => $idPil,
+                ]);
+            }
+        }
+
+        return redirect()
+            ->route('parameter.index')
+            ->with('success', 'Parameter berhasil diperbarui.');
     }
 
     /**
