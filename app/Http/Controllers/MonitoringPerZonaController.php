@@ -31,7 +31,8 @@ class MonitoringPerZonaController extends Controller
                     return [
                         'id' => $ptp->parameter->id,
                         'simbol' => $ptp->parameter->simbol,
-                        'satuan' => $ptp->parameter->satuan->simbol ?? ''
+                        'satuan' => $ptp->parameter->satuan->simbol ?? '',
+                        'jenis' => $ptp->parameter->jenis,
                     ];
                 });
 

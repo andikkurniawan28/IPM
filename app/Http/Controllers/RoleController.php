@@ -44,7 +44,7 @@ class RoleController extends Controller
                     $laporan = $row->izin_akses_laporan ? '✅ Laporan' : '❌ Laporan';
                     $master = $row->izin_akses_master ? '✅ Master' : '❌ Master';
 
-                    return implode('<br>', [$input, $laporan, $master]);
+                    return implode('<br>', [$input, $master]);
                 })
                 ->rawColumns(['aksi', 'izin'])
                 ->make(true);
@@ -65,7 +65,7 @@ class RoleController extends Controller
         ]);
 
         $validated['izin_akses_input'] = $request->has('izin_akses_input');
-        $validated['izin_akses_laporan'] = $request->has('izin_akses_laporan');
+        // $validated['izin_akses_laporan'] = $request->has('izin_akses_laporan');
         $validated['izin_akses_master'] = $request->has('izin_akses_master');
 
         Role::create($validated);
@@ -85,7 +85,7 @@ class RoleController extends Controller
         ]);
 
         $validated['izin_akses_input'] = $request->has('izin_akses_input');
-        $validated['izin_akses_laporan'] = $request->has('izin_akses_laporan');
+        // $validated['izin_akses_laporan'] = $request->has('izin_akses_laporan');
         $validated['izin_akses_master'] = $request->has('izin_akses_master');
 
         $role->update($validated);

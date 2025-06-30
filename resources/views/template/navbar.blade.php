@@ -78,16 +78,16 @@
                                 <a class="dropdown-item" href="{{ route('monitoring.index') }}">
                                     <i class="bi bi-eye"></i> Monitoring
                                 </a>
-                                <a class="dropdown-item" href="{{ route('input_monitoring_log') }}">
+                                {{-- <a class="dropdown-item" href="{{ route('input_monitoring_log') }}">
                                     <i class="bi bi-clock-history"></i> Input Log
-                                </a>
+                                </a> --}}
                             </li>
                         </ul>
                     </li>
                 @endif
 
                 {{-- MENU LAPORAN --}}
-                @if (auth()->check() && auth()->user()->role->izin_akses_laporan)
+                {{-- @if (auth()->check() && auth()->user()->role->izin_akses_laporan)
                     <li class="nav-item dropdown">
                         <a class="nav-link dropdown-toggle fw-semibold" href="#" id="laporanMenu" role="button"
                             data-bs-toggle="dropdown">
@@ -101,7 +101,7 @@
                             </li>
                         </ul>
                     </li>
-                @endif
+                @endif --}}
 
                 {{-- MENU MASTER --}}
                 @if (auth()->check() && auth()->user()->role->izin_akses_master)

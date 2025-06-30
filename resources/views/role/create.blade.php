@@ -23,11 +23,11 @@
                             <label class="form-check-label" for="izin_akses_input">Input</label>
                         </div>
 
-                        <div class="form-check form-check-inline">
+                        {{-- <div class="form-check form-check-inline">
                             <input class="form-check-input" type="checkbox" name="izin_akses_laporan"
                                 id="izin_akses_laporan" value="1" checked>
                             <label class="form-check-label" for="izin_akses_laporan">Laporan</label>
-                        </div>
+                        </div> --}}
 
                         <div class="form-check form-check-inline">
                             <input class="form-check-input" type="checkbox" name="izin_akses_master" id="izin_akses_master"

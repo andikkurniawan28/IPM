@@ -17,6 +17,7 @@
             min-height: 85vh;
         }
     </style>
+    @yield('style')
 </head>
 
 <body>
@@ -29,7 +30,7 @@
     </main>
 
     <footer class="text-center text-light py-3 border-top bg-dark">
-        <small>&copy; {{ date('Y') }} <a href="https://wa.me/6285733465399" target="_blank" class="text-light">Andik Kurniawan</a>.</small>
+        <small>&copy; {{ date('Y') }} <a href="https://wa.me/6285733465399" target="_blank" class="text-light">PT. Optima Teknologi Industri.</a></small>
     </footer>
 
     @include('template.session')

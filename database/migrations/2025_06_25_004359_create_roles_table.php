@@ -15,7 +15,7 @@ return new class extends Migration
             $table->id();
             $table->string('nama')->unique();
             $table->boolean('izin_akses_input')->default(1);
-            $table->boolean('izin_akses_laporan')->default(1);
+            // $table->boolean('izin_akses_laporan')->default(1);
             $table->boolean('izin_akses_master')->default(1);
             $table->timestamp('created_at')->useCurrent();
             $table->timestamp('updated_at')->useCurrent()->useCurrentOnUpdate();

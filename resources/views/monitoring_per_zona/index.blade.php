@@ -32,7 +32,11 @@
 
                             let headerRow = `<th><small>Jam</small></th>`;
                             tp.parameters.forEach(p => {
-                                headerRow += `<th><small>${p.simbol}<sub>(${p.satuan})</sub></small></th>`;
+                                if (p.jenis === 'kuantitatif') {
+                                    headerRow += `<th><small>${p.simbol}<sub>(${p.satuan})</sub></small></th>`;
+                                } else {
+                                    headerRow += `<th><small>${p.simbol}</small></th>`;
+                                }
                             });
 
                             let bodyRows = '';

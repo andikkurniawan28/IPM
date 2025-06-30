@@ -73,14 +73,16 @@ class MonitoringController extends Controller
                 // Aksi edit/hapus
                 ->addColumn('aksi', function ($row) {
                     $editUrl   = route('monitoring.edit', $row->id);
+                    $showUrl   = route('monitoring.show', $row->id);
                     $deleteUrl = route('monitoring.destroy', $row->id);
                     return '
+                        <a href="' . $showUrl . '" class="btn btn-sm btn-info">Log</a>
                         <a href="' . $editUrl . '" class="btn btn-sm btn-warning">Edit</a>
-                        <form action="' . $deleteUrl . '" method="POST" class="d-inline" onsubmit="return confirm(\'Hapus data ini?\')">
-                            ' . csrf_field() . method_field('DELETE') . '
-                            <button class="btn btn-sm btn-danger">Hapus</button>
-                        </form>
                     ';
+                    // <form action="' . $deleteUrl . '" method="POST" class="d-inline" onsubmit="return confirm(\'Hapus data ini?\')">
+                    //         ' . csrf_field() . method_field('DELETE') . '
+                    //         <button class="btn btn-sm btn-danger">Hapus</button>
+                    //     </form>
                 })
 
                 ->rawColumns(['parameter', 'aksi'])
@@ -95,7 +97,7 @@ class MonitoringController extends Controller
      */
     public function create()
     {
-        return view('monitoring.create', [
+        return view('monitoring.create2', [
             'titik_pengamatans' => TitikPengamatan::orderBy('urutan', 'asc')->get(),
             'parameters' => Parameter::all(),
         ]);
@@ -106,6 +108,8 @@ class MonitoringController extends Controller
      */
     public function store(Request $request)
     {
+        // return $request;
+
         $request->validate([
             'periode'               => 'required|date',
             'jam'                   => 'required|date_format:H:i',
@@ -176,7 +180,8 @@ class MonitoringController extends Controller
      */
     public function show(Monitoring $monitoring)
     {
-        //
+        $logs = $monitoring->input_monitoring_log()->latest()->get();
+        return view('monitoring.show', compact('monitoring', 'logs'));
     }
 
     /**
@@ -184,7 +189,7 @@ class MonitoringController extends Controller
      */
     public function edit(Monitoring $monitoring)
     {
-        return view('monitoring.edit', [
+        return view('monitoring.edit2', [
             'monitoring' => $monitoring,
             'titik_pengamatans' => TitikPengamatan::orderBy('urutan', 'asc')->get(),
             'parameters' => Parameter::all(),
