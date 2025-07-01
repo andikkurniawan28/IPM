@@ -10,7 +10,7 @@
     <div class="card shadow-sm p-4 bg-dark text-light" style="max-width: 400px; width: 100%;">
         <div class="text-center mb-4">
             <h5 class="fw-bold"><i class="bi bi-graph-up"></i> MDP</h5>
-            <small class="text-light">Monitoring Dalam Pabrik</small>
+            <small class="text-light">Monitoring Data Platform</small>
         </div>
 
         <form action="{{ route('login_process') }}" method="POST">
