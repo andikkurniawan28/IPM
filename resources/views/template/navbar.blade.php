@@ -125,6 +125,13 @@
                     </li>
                 @endif
 
+                {{-- MENU DOKUMENTASI --}}
+                <li class="nav-item">
+                    <a class="nav-link fw-semibold" href="{{ asset('doc/doc.pdf') }}" target="_blank">
+                        <i class="bi bi-file-earmark-text"></i> Dokumentasi
+                    </a>
+                </li>
+
 
             </ul>
 
