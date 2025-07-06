@@ -42,6 +42,10 @@ class Parameter extends Model
                               ->after('updated_at');
                     }
                 });
+
+
+            // Tambahkan index secara eksplisit setelah kolom ditambahkan
+            DB::statement("CREATE INDEX idx_{$column} ON monitorings ({$column})");
             }
         });
     }

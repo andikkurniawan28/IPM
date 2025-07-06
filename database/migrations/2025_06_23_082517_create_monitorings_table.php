@@ -13,8 +13,8 @@ return new class extends Migration
     {
         Schema::create('monitorings', function (Blueprint $table) {
             $table->id();
-            $table->date('periode');
-            $table->time('jam');
+            $table->date('periode')->index();
+            $table->time('jam')->index();
             $table->foreignId('titik_pengamatan_id')->constrained();
             $table->timestamp('created_at')->useCurrent();
             $table->timestamp('updated_at')->useCurrent()->useCurrentOnUpdate();
