@@ -3,6 +3,9 @@
 @section('content')
     <div class="container-fluid py-0 px-6">
         <h4 class="mb-4">Monitoring Semua</h4>
+        <button id="exportExcelBtn" class="btn btn-success btn-sm mb-3">
+            <i class="bi bi-download"></i> Export Excel
+        </button>
         <div id="titikCards" class="row g-4">
             <!-- Kartu titik pengamatan akan muncul di sini -->
         </div>
@@ -11,6 +14,7 @@
 
 @section('scripts')
     @include('template.floating-button')
+    <script src="https://cdn.sheetjs.com/xlsx-latest/package/dist/xlsx.full.min.js"></script>
     <script>
         document.addEventListener('DOMContentLoaded', () => {
 
@@ -93,6 +97,52 @@
 
             loadTitikPengamatan();
             setInterval(loadTitikPengamatan, 60000); // refresh tiap 1 menit
+        });
+    </script>
+    <script>
+        document.getElementById('exportExcelBtn').addEventListener('click', function() {
+            const container = document.querySelector('.container-fluid.py-0.px-6');
+
+            if (!container) {
+                alert('Kontainer tidak ditemukan.');
+                return;
+            }
+
+            // Buat workbook baru
+            const wb = XLSX.utils.book_new();
+            let sheetIndex = 1;
+
+            // Ambil semua table di dalam container
+            const tables = container.querySelectorAll('table');
+
+            if (tables.length === 0) {
+                alert('Tidak ada tabel untuk diekspor.');
+                return;
+            }
+
+            // tables.forEach((table, idx) => {
+            //     const ws = XLSX.utils.table_to_sheet(table);
+            //     const titleEl = card.querySelector('.card-title');
+            //     const sheetName = `Titik ${sheetIndex++}`;
+            //     XLSX.utils.book_append_sheet(wb, ws, sheetName);
+            // });
+
+            tables.forEach((table, idx) => {
+                const ws = XLSX.utils.table_to_sheet(table);
+
+                const card = table.closest('.card');
+                const titleEl = card?.querySelector('.card-title');
+
+                let sheetName = `Titik ${idx + 1}`;
+                if (titleEl) {
+                    sheetName = titleEl.textContent.trim().substring(0, 31); // Excel max 31 karakter
+                }
+
+                XLSX.utils.book_append_sheet(wb, ws, sheetName);
+            });
+
+            const periode = '{{ session('periode') ?? 'periode_tidak_ditemukan' }}';
+            XLSX.writeFile(wb, `Monitoring_${periode}.xlsx`);
         });
     </script>
 @endsection
