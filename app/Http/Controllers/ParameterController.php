@@ -164,6 +164,10 @@ class ParameterController extends Controller
      */
     public function update(Request $request, Parameter $parameter)
     {
+        $request->merge([
+            'jenis' => $request->input('jenis', $parameter->jenis),
+        ]);
+
         // 1) Validasi input, pastikan `jenis` wajib
         $data = $request->validate([
             'nama'                  => 'required|string|max:255|unique:parameters,nama,' . $parameter->id,

@@ -42,7 +42,7 @@ class TitikPengamatanController extends Controller
                     foreach ($row->parameter_titik_pengamatans as $ptp) {
                         $parameter = $ptp->parameter;
                         $satuan = $parameter?->satuan?->simbol ?? '';
-                        $list .= '<li>' . ($parameter->nama ?? '-') . ($satuan ? " <sub>({$satuan})</sub>" : '') . '</li>';
+                        $list .= '<li>' . ($parameter->simbol ?? '-') . ' | ' . ($parameter->nama ?? '-') . ($satuan ? " <sub>({$satuan})</sub>" : '') . '</li>';
                     }
                     $list .= '</ul>';
 
