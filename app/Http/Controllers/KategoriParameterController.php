@@ -28,10 +28,12 @@ class KategoriParameterController extends Controller
             return DataTables::of($data)
                 ->addIndexColumn()
                 ->addColumn('aksi', function ($row) {
+                    $monitoringUrl = route('monitoring_per_kategori.index', $row->id);
                     $editUrl = route('kategori_parameter.edit', $row->id);
                     $deleteUrl = route('kategori_parameter.destroy', $row->id);
 
                     return '
+                        <a target="_blank" href="' . $monitoringUrl . '" class="btn btn-sm btn-info">Monitoring</a>
                         <a href="' . $editUrl . '" class="btn btn-sm btn-warning">Edit</a>
                         <form action="' . $deleteUrl . '" method="POST" class="d-inline" onsubmit="return confirm(\'Hapus data ini?\')">
                             ' . csrf_field() . method_field('DELETE') . '

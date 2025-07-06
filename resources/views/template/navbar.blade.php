@@ -144,7 +144,7 @@
                             </a>
                         </li>
                         <li>
-                            <a class="dropdown-item" href="{{ route('dokumentasi_pengembang') }}">
+                            <a class="dropdown-item" target="_blank" href="{{ route('dokumentasi_pengembang') }}">
                                 Pengembang
                             </a>
                         </li>
