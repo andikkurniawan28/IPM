@@ -189,7 +189,7 @@ class MonitoringController extends Controller
      */
     public function edit(Monitoring $monitoring)
     {
-        return view('monitoring.edit2', [
+        return view('monitoring.edit', [
             'monitoring' => $monitoring,
             'titik_pengamatans' => TitikPengamatan::orderBy('urutan', 'asc')->get(),
             'parameters' => Parameter::all(),
