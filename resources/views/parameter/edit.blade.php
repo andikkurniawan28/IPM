@@ -34,15 +34,22 @@
                                 @endforeach
                             </select>
                         </div>
-                        <div class="col-md-4 d-flex align-items-center">
-                            <label class="me-2 mb-0">Jenis</label>
-                            <div class="form-check form-switch">
-                                <input class="form-check-input" type="checkbox" id="jenisSwitch" name="jenis"
-                                    value="kualitatif"
-                                    {{ old('jenis', $parameter->jenis) == 'kualitatif' ? 'checked' : '' }}>
-                                <label class="form-check-label" for="jenisSwitch" id="jenisLabel"></label>
-                            </div>
+                        <div class="col-md-4">
+                            <label class="form-label">Jenis</label>
+                            <select class="form-select" id="jenisSelect" name="jenis" required>
+                                <option disabled>-- Pilih Jenis --</option>
+                                <option value="kuantitatif"
+                                    {{ old('jenis', $parameter->jenis) == 'kuantitatif' ? 'selected' : '' }}>Kuantitatif
+                                </option>
+                                <option value="kualitatif_opsional"
+                                    {{ old('jenis', $parameter->jenis) == 'kualitatif_opsional' ? 'selected' : '' }}>
+                                    Kualitatif Opsional</option>
+                                <option value="kualitatif_entry"
+                                    {{ old('jenis', $parameter->jenis) == 'kualitatif_entry' ? 'selected' : '' }}>Kualitatif
+                                    Entry</option>
+                            </select>
                         </div>
+
 
                         <!-- Satuan & Agregasi -->
                         <div class="col-md-4" id="satuan-group">
@@ -110,7 +117,6 @@
 @endsection
 
 @section('scripts')
-    <!-- jQuery & Select2 -->
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
     <link href="https://cdn.jsdelivr.net/npm/@ttskch/select2-bootstrap4-theme@1.5.2/dist/select2-bootstrap4.min.css"
@@ -119,7 +125,6 @@
 
     <script>
         $(function() {
-            // Initialize Select2 on Kategori & Satuan
             $('#kategori_parameter_id, #satuan_id').select2({
                 theme: 'bootstrap4',
                 placeholder: '-- Pilih --',
@@ -127,20 +132,26 @@
                 width: '100%'
             });
 
-            // Toggle fields based on jenisSwitch
-            function toggle() {
-                const isKual = $('#jenisSwitch').is(':checked');
-                $('#jenisLabel').text(isKual ? 'Kualitatif' : 'Kuantitatif');
-                $('#satuan-group, #agregasi-group')
-                    .toggle(!isKual)
-                    .find('select').prop('required', !isKual);
-                $('#kualitatif-group')
-                    .toggle(isKual)
-                    .find('input[type=checkbox]').prop('disabled', !isKual);
+            function toggleJenis() {
+                const jenis = $('#jenisSelect').val();
+
+                const isKuantitatif = jenis === 'kuantitatif';
+                const isKualitatifOpsional = jenis === 'kualitatif_opsional';
+
+                $('#satuan-group').toggle(isKuantitatif)
+                    .find('select').prop('required', isKuantitatif);
+
+                $('#agregasi-group').toggle(isKuantitatif)
+                    .find('select').prop('required', isKuantitatif);
+
+                $('#kualitatif-group').toggle(isKualitatifOpsional)
+                    .find('input[type=checkbox]')
+                    .prop('disabled', !isKualitatifOpsional)
+                    .prop('checked', !isKualitatifOpsional ? false : undefined);
             }
 
-            // Bind and trigger initial toggle
-            $('#jenisSwitch').change(toggle).trigger('change');
+            $('#jenisSelect').change(toggleJenis);
+            toggleJenis(); // initialize on load
         });
     </script>
 @endsection

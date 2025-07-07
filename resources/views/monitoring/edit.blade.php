@@ -71,6 +71,14 @@
                                            class="form-control form-control-sm"
                                            placeholder="Masukkan {{ $parameter->nama }}..."
                                            value="{{ $value }}">
+                                @elseif($parameter->jenis === 'kualitatif_entry')
+                                    <input type="text"
+                                           step="any"
+                                           name="{{ $field }}"
+                                           id="{{ $field }}"
+                                           class="form-control form-control-sm"
+                                           placeholder="Masukkan {{ $parameter->nama }}..."
+                                           value="{{ $value }}">
                                 @else
                                     <div>
                                         @foreach($parameter->pilihan_kualitatifs as $pil)

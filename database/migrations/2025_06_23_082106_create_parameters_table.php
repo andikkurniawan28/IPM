@@ -21,7 +21,7 @@ return new class extends Migration
             $table->string('nama')->unique(); // Nama parameter (misalnya: "Tekanan")
             $table->string('simbol'); // Selalu diisi, untuk tampilan tabel (misalnya: "TK", "AKT")
 
-            $table->enum('jenis', ['kuantitatif', 'kualitatif'])->default('kuantitatif');
+            $table->enum('jenis', ['kuantitatif', 'kualitatif_opsional', 'kualitatif_entry'])->default('kuantitatif');
 
             // Hanya berlaku untuk kuantitatif
             $table->enum('metode_agregasi', ['sum', 'avg', 'count'])->nullable();

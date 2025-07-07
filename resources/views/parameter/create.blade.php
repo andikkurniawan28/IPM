@@ -28,13 +28,24 @@
                                 @endforeach
                             </select>
                         </div>
-                        <div class="col-md-4 d-flex align-items-center">
-                            <label class="me-2 mb-0">Jenis</label>
-                            <div class="form-check form-switch">
-                                <input class="form-check-input" type="checkbox" id="jenisSwitch" name="jenis"
-                                    value="kualitatif">
-                                <label class="form-check-label" for="jenisSwitch" id="jenisLabel">Kuantitatif</label>
-                            </div>
+
+                        <!-- <div class="col-md-4 d-flex align-items-center">
+                                <label class="me-2 mb-0">Jenis</label>
+                                <div class="form-check form-switch">
+                                    <input class="form-check-input" type="checkbox" id="jenisSwitch" name="jenis"
+                                        value="kualitatif">
+                                    <label class="form-check-label" for="jenisSwitch" id="jenisLabel">Kuantitatif</label>
+                                </div>
+                            </div> -->
+
+                        <div class="col-md-4">
+                            <!-- <label for="jenisSelect" class="me-2 mb-0">Jenis</label> -->
+                            <label class="form-label">Jenis</label>
+                            <select class="form-control" id="jenisSelect" name="jenis">
+                                <option value="kuantitatif">Kuantitatif</option>
+                                <option value="kualitatif_opsional">Kualitatif Opsional</option>
+                                <option value="kualitatif_entry">Kualitatif Entry</option>
+                            </select>
                         </div>
 
                         <!-- Satuan & Agregasi -->
@@ -52,7 +63,7 @@
                             <select name="metode_agregasi" class="form-select" required>
                                 <option disabled selected>-- Pilih Metode Agregasi --</option>
                                 <option value="sum">Sum</option>
-                                <option value="avg">Avg</option>
+                                <option value="avg">Average</option>
                                 <option value="count">Count</option>
                             </select>
                         </div>
@@ -103,7 +114,7 @@
 
     <script>
         $(function() {
-            // Initialize Select2
+            // Inisialisasi Select2
             $('#kategori_parameter_id, #satuan_id').select2({
                 theme: 'bootstrap4',
                 placeholder: '-- Pilih --',
@@ -111,21 +122,33 @@
                 width: '100%'
             });
 
-            // Toggle logic
-            function toggle() {
-                const isKual = $('#jenisSwitch').is(':checked');
-                $('#jenisLabel').text(isKual ? 'Kualitatif' : 'Kuantitatif');
-                $('#satuan-group, #agregasi-group')
-                    .toggle(!isKual)
-                    .find('select').prop('required', !isKual);
+            function toggleJenis() {
+                const jenis = $('#jenisSelect').val();
+
+                const isKuantitatif = jenis === 'kuantitatif';
+                const isKualitatifOpsional = jenis === 'kualitatif_opsional';
+
+                // Kualitatif Group hanya untuk opsional
                 $('#kualitatif-group')
-                    .toggle(isKual)
+                    .toggle(isKualitatifOpsional)
                     .find('input[type=checkbox]')
-                    .prop('disabled', !isKual)
+                    .prop('disabled', !isKualitatifOpsional)
                     .prop('checked', false);
+
+                // Satuan & Agregasi hanya untuk kuantitatif
+                $('#satuan-group')
+                    .toggle(isKuantitatif)
+                    .find('select')
+                    .prop('required', isKuantitatif);
+
+                $('#agregasi-group')
+                    .toggle(isKuantitatif)
+                    .find('select')
+                    .prop('required', isKuantitatif);
             }
 
-            $('#jenisSwitch').change(toggle).trigger('change');
+            $('#jenisSelect').change(toggleJenis);
+            toggleJenis(); // panggil saat awal load
         });
     </script>
 @endsection

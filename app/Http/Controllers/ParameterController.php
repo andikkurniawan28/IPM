@@ -52,7 +52,7 @@ class ParameterController extends Controller
                 ';
                 })
                 ->addColumn('pilihan', function($row) {
-                    if ($row->jenis === 'kualitatif' && $row->pilihan_kualitatifs->isNotEmpty()) {
+                    if ($row->jenis === 'kualitatif_opsional' && $row->pilihan_kualitatifs->isNotEmpty()) {
                         $html = '<ul class="mb-0 ps-3">';
                         foreach ($row->pilihan_kualitatifs as $pil) {
                             $keterangan = $pil->jenis_pilihan_kualitatif->keterangan ?? $pil->jenis_pilihan_kualitatif_id;
@@ -90,16 +90,16 @@ class ParameterController extends Controller
     public function store(Request $request)
     {
         // 0) Beri default jika tidak dikirim
-        $request->merge([
+        /* $request->merge([
             'jenis' => $request->input('jenis', 'kuantitatif')
-        ]);
+        ]); */
 
         // 1) Validasi
         $data = $request->validate([
             'nama'                  => 'required|string|unique:parameters,nama',
             'simbol'                => 'required|string|unique:parameters,simbol',
             'kategori_parameter_id' => 'required|exists:kategori_parameters,id',
-            'jenis'                 => 'required|in:kuantitatif,kualitatif',
+            'jenis'                 => 'required|in:kuantitatif,kualitatif_opsional,kualitatif_entry',
             'satuan_id'             => 'nullable|required_if:jenis,kuantitatif|exists:satuans,id',
             'metode_agregasi'       => 'nullable|required_if:jenis,kuantitatif|in:sum,avg,count',
             'pilihan_kualitatif'    => 'nullable|array',
@@ -119,7 +119,7 @@ class ParameterController extends Controller
         ]);
 
         // 4) Jika KUALITATIF → Simpan pilihan di pivot
-        if ($param->jenis === 'kualitatif' && !empty($data['pilihan_kualitatif'])) {
+        if ($param->jenis === 'kualitatif_opsional' && !empty($data['pilihan_kualitatif'])) {
             foreach ($data['pilihan_kualitatif'] as $jenisPilId) {
                 PilihanKualitatif::create([
                     'parameter_id'               => $param->id,
@@ -164,16 +164,16 @@ class ParameterController extends Controller
      */
     public function update(Request $request, Parameter $parameter)
     {
-        $request->merge([
+        /* $request->merge([
             'jenis' => $request->input('jenis', $parameter->jenis),
-        ]);
+        ]); */
 
         // 1) Validasi input, pastikan `jenis` wajib
         $data = $request->validate([
             'nama'                  => 'required|string|max:255|unique:parameters,nama,' . $parameter->id,
             'simbol'                => 'required|string|max:50|unique:parameters,simbol,' . $parameter->id,
             'kategori_parameter_id' => 'required|exists:kategori_parameters,id',
-            'jenis'                 => 'required|in:kuantitatif,kualitatif',
+            'jenis'                 => 'required|in:kuantitatif,kualitatif_opsional,kualitatif_entry',
             'satuan_id'             => 'nullable|required_if:jenis,kuantitatif|exists:satuans,id',
             'metode_agregasi'       => 'nullable|required_if:jenis,kuantitatif|in:sum,avg,count',
             'keterangan'            => 'nullable|string',
@@ -196,7 +196,7 @@ class ParameterController extends Controller
         PilihanKualitatif::where('parameter_id', $parameter->id)->delete();
 
         // 4) Re-insert pilihan hanya jika kualitatif
-        if ($data['jenis'] === 'kualitatif' && !empty($data['pilihan_kualitatif'])) {
+        if ($data['jenis'] === 'kualitatif_opsional' && !empty($data['pilihan_kualitatif'])) {
             foreach ($data['pilihan_kualitatif'] as $idPil) {
                 PilihanKualitatif::create([
                     'parameter_id'                => $parameter->id,

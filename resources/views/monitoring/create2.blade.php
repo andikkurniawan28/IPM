@@ -48,6 +48,11 @@
                                     <input type="number" step="any" name="param{{ $parameter->id }}"
                                         id="param{{ $parameter->id }}" class="form-control form-control-sm"
                                         placeholder="Masukkan {{ $parameter->nama }}...">
+                                @elseif ($parameter->jenis === 'kualitatif_entry')
+                                    {{-- Text input untuk kualitatif_entry --}}
+                                    <input type="text" step="any" name="param{{ $parameter->id }}"
+                                        id="param{{ $parameter->id }}" class="form-control form-control-sm"
+                                        placeholder="Masukkan {{ $parameter->nama }}...">
                                 @else
                                     <select class="form-select form-select-sm" name="param{{ $parameter->id }}"
                                         id="param{{ $parameter->id }}">

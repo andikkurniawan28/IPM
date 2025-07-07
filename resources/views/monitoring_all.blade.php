@@ -150,7 +150,9 @@
 
                 let sheetName = `Titik ${idx + 1}`;
                 if (titleEl) {
-                    sheetName = titleEl.textContent.trim().substring(0, 31); // Excel max 31 karakter
+                    sheetName = titleEl.textContent.trim()
+                        .replace(/[:\\\/\?\*\[\]]/g, '') // hilangkan karakter terlarang
+                        .substring(0, 31); // potong jadi max 31 karakter
                 }
 
                 XLSX.utils.book_append_sheet(wb, ws, sheetName);
