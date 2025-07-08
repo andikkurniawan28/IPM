@@ -12,19 +12,12 @@ use App\Models\ParameterTitikPengamatan;
 
 class TitikPengamatanController extends Controller
 {
-    public function __construct()
-    {
-        $this->middleware(function ($request, $next) {
-            if (!Auth::check() || !Auth::user()->role || !Auth::user()->role->izin_akses_master) {
-                return redirect()->back()->with('error', 'Anda tidak memiliki izin akses.');
-            }
-
-            return $next($request);
-        });
-    }
-
     public function index(Request $request)
     {
+        if ($response = $this->checkIzin('akses_master_daftar_titik_pengamatan')) {
+            return $response;
+        }
+
         if ($request->ajax()) {
             $data = TitikPengamatan::with(['zona', 'parameter_titik_pengamatans.parameter'])->orderBy('titik_pengamatans.urutan', 'asc');
 
@@ -71,6 +64,10 @@ class TitikPengamatanController extends Controller
 
     public function create()
     {
+        if ($response = $this->checkIzin('akses_master_tambah_titik_pengamatan')) {
+            return $response;
+        }
+
         return view('titik_pengamatan.create', [
             'zonas' => Zona::all(),
             'parameters' => Parameter::all(),
@@ -79,6 +76,10 @@ class TitikPengamatanController extends Controller
 
     public function store(Request $request)
     {
+        if ($response = $this->checkIzin('akses_master_tambah_titik_pengamatan')) {
+            return $response;
+        }
+
         $request->request->add(['urutan' => TitikPengamatan::max('urutan') + 1]);
         $validated = $request->validate([
             'urutan' => 'required|integer|min:1',
@@ -102,6 +103,10 @@ class TitikPengamatanController extends Controller
 
     public function edit(TitikPengamatan $titik_pengamatan)
     {
+        if ($response = $this->checkIzin('akses_master_edit_titik_pengamatan')) {
+            return $response;
+        }
+
         return view('titik_pengamatan.edit', [
             'titik_pengamatan' => $titik_pengamatan,
             'zonas' => Zona::all(),
@@ -111,6 +116,10 @@ class TitikPengamatanController extends Controller
 
     public function update(Request $request, $id)
     {
+        if ($response = $this->checkIzin('akses_master_edit_titik_pengamatan')) {
+            return $response;
+        }
+
         $validated = $request->validate([
             'urutan' => 'required|unique:titik_pengamatans,urutan,' . $id,
             'zona_id' => 'required|exists:zonas,id',
@@ -122,6 +131,7 @@ class TitikPengamatanController extends Controller
         ]);
 
         $titik = TitikPengamatan::findOrFail($id);
+
         $titik->update([
             'urutan' => $validated['urutan'],
             'zona_id' => $validated['zona_id'],
@@ -149,6 +159,10 @@ class TitikPengamatanController extends Controller
 
     public function destroy(TitikPengamatan $titik_pengamatan)
     {
+        if ($response = $this->checkIzin('akses_master_hapus_titik_pengamatan')) {
+            return $response;
+        }
+
         $titik_pengamatan->delete();
 
         return redirect()->route('titik_pengamatan.index')->with('success', 'Titik Pengamatan berhasil dihapus.');

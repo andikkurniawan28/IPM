@@ -28,7 +28,7 @@
                         <i class="bi bi-activity"></i> Monitoring
                     </a>
                     <ul class="dropdown-menu" aria-labelledby="monitoringMenu">
-                        <li>
+                        {{-- <li>
                             <h6 class="dropdown-header">Semua</h6>
                         </li>
                         <li>
@@ -38,7 +38,7 @@
                         </li>
                         <li>
                             <hr class="dropdown-divider">
-                        </li>
+                        </li> --}}
                         <li>
                             <h6 class="dropdown-header">Per Kategori</h6>
                         </li>
@@ -67,7 +67,7 @@
                 </li>
 
                 {{-- MENU INPUT --}}
-                @if (auth()->check() && auth()->user()->role->izin_akses_input)
+                {{-- @if (auth()->check() && auth()->user()->role->izin_akses_input) --}}
                     <li class="nav-item dropdown">
                         <a class="nav-link dropdown-toggle fw-semibold" href="#" id="transaksiMenu" role="button"
                             data-bs-toggle="dropdown">
@@ -84,7 +84,7 @@
                             </li>
                         </ul>
                     </li>
-                @endif
+                {{-- @endif --}}
 
                 {{-- MENU LAPORAN --}}
                 {{-- @if (auth()->check() && auth()->user()->role->izin_akses_laporan)
@@ -104,7 +104,7 @@
                 @endif --}}
 
                 {{-- MENU MASTER --}}
-                @if (auth()->check() && auth()->user()->role->izin_akses_master)
+                {{-- @if (auth()->check() && auth()->user()->role->izin_akses_master) --}}
                     <li class="nav-item dropdown">
                         <a class="nav-link dropdown-toggle fw-semibold" href="#" id="masterMenu" role="button"
                             data-bs-toggle="dropdown">
@@ -129,7 +129,7 @@
                                         class="bi bi-person-circle"></i> User</a></li>
                         </ul>
                     </li>
-                @endif
+                {{-- @endif --}}
 
                 {{-- MENU DOKUMENTASI --}}
                 <li class="nav-item dropdown">

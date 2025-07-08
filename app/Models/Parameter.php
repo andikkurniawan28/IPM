@@ -26,27 +26,63 @@ class Parameter extends Model
         return $this->hasMany(PilihanKualitatif::class);
     }
 
+    // protected static function booted()
+    // {
+    //     static::created(function (Parameter $parameter) {
+    //         $column = 'param' . $parameter->id;
+    //         if (! Schema::hasColumn('monitorings', $column)) {
+    //             Schema::table('monitorings', function (Blueprint $table) use ($column, $parameter) {
+    //                 if ($parameter->jenis === 'kuantitatif') {
+    //                     $table->float($column)
+    //                           ->nullable()
+    //                           ->after('updated_at');
+    //                 } else {
+    //                     $table->string($column)
+    //                           ->nullable()
+    //                           ->after('updated_at');
+    //                 }
+    //             });
+
+
+    //         // Tambahkan index secara eksplisit setelah kolom ditambahkan
+    //         DB::statement("CREATE INDEX idx_{$column} ON monitorings ({$column})");
+    //         }
+    //     });
+    // }
+
     protected static function booted()
     {
         static::created(function (Parameter $parameter) {
-            $column = 'param' . $parameter->id;
-            if (! Schema::hasColumn('monitorings', $column)) {
-                Schema::table('monitorings', function (Blueprint $table) use ($column, $parameter) {
+            $monitoringColumn = 'param' . $parameter->id;
+            $roleColumn = 'akses_input_param' . $parameter->id;
+
+            // Tambahkan kolom pada tabel monitorings jika belum ada
+            if (!Schema::hasColumn('monitorings', $monitoringColumn)) {
+                Schema::table('monitorings', function (Blueprint $table) use ($monitoringColumn, $parameter) {
                     if ($parameter->jenis === 'kuantitatif') {
-                        $table->float($column)
-                              ->nullable()
-                              ->after('updated_at');
+                        $table->float($monitoringColumn)
+                            ->nullable()
+                            ->after('updated_at');
                     } else {
-                        $table->string($column)
-                              ->nullable()
-                              ->after('updated_at');
+                        $table->string($monitoringColumn)
+                            ->nullable()
+                            ->after('updated_at');
                     }
                 });
 
+                // Tambahkan index
+                DB::statement("CREATE INDEX idx_{$monitoringColumn} ON monitorings ({$monitoringColumn})");
+            }
 
-            // Tambahkan index secara eksplisit setelah kolom ditambahkan
-            DB::statement("CREATE INDEX idx_{$column} ON monitorings ({$column})");
+            // Tambahkan kolom izin_param{id} di tabel roles jika belum ada
+            if (!Schema::hasColumn('roles', $roleColumn)) {
+                Schema::table('roles', function (Blueprint $table) use ($roleColumn) {
+                    $table->boolean($roleColumn)
+                        ->default(false)
+                        ->after('updated_at');
+                });
             }
         });
     }
+
 }

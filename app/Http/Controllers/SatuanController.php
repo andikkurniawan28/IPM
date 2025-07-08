@@ -9,19 +9,12 @@ use Illuminate\Support\Facades\Auth;
 
 class SatuanController extends Controller
 {
-    public function __construct()
-    {
-        $this->middleware(function ($request, $next) {
-            if (!Auth::check() || !Auth::user()->role || !Auth::user()->role->izin_akses_master) {
-                return redirect()->back()->with('error', 'Anda tidak memiliki izin akses.');
-            }
-
-            return $next($request);
-        });
-    }
-
     public function index(Request $request)
     {
+        if ($response = $this->checkIzin('akses_master_daftar_satuan')) {
+            return $response;
+        }
+
         if ($request->ajax()) {
             $data = Satuan::query();
 
@@ -48,11 +41,19 @@ class SatuanController extends Controller
 
     public function create()
     {
+        if ($response = $this->checkIzin('akses_master_tambah_satuan')) {
+            return $response;
+        }
+
         return view('satuan.create');
     }
 
     public function store(Request $request)
     {
+        if ($response = $this->checkIzin('akses_master_tambah_satuan')) {
+            return $response;
+        }
+
         $validated = $request->validate([
             'simbol' => 'required|string|max:50|unique:satuans,simbol',
             'nama' => 'required|string|max:255',
@@ -65,11 +66,19 @@ class SatuanController extends Controller
 
     public function edit(Satuan $satuan)
     {
+        if ($response = $this->checkIzin('akses_master_edit_satuan')) {
+            return $response;
+        }
+
         return view('satuan.edit', compact('satuan'));
     }
 
     public function update(Request $request, Satuan $satuan)
     {
+        if ($response = $this->checkIzin('akses_master_edit_satuan')) {
+            return $response;
+        }
+
         $validated = $request->validate([
             'simbol' => 'required|string|max:50|unique:satuans,simbol,' . $satuan->id,
             'nama' => 'required|string|max:255',
@@ -82,6 +91,10 @@ class SatuanController extends Controller
 
     public function destroy(Satuan $satuan)
     {
+        if ($response = $this->checkIzin('akses_master_hapus_satuan')) {
+            return $response;
+        }
+
         $satuan->delete();
 
         return redirect()->route('satuan.index')->with('success', 'Satuan berhasil dihapus.');

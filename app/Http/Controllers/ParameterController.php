@@ -13,19 +13,12 @@ use App\Models\JenisPilihanKualitatif;
 
 class ParameterController extends Controller
 {
-    public function __construct()
-    {
-        $this->middleware(function ($request, $next) {
-            if (!Auth::check() || !Auth::user()->role || !Auth::user()->role->izin_akses_master) {
-                return redirect()->back()->with('error', 'Anda tidak memiliki izin akses.');
-            }
-
-            return $next($request);
-        });
-    }
-
     public function index(Request $request)
     {
+        if ($response = $this->checkIzin('akses_master_daftar_parameter')) {
+            return $response;
+        }
+
         if ($request->ajax()) {
             $data = Parameter::with(['kategori_parameter', 'satuan', 'pilihan_kualitatifs.jenis_pilihan_kualitatif']); // eager load relasi
 
@@ -77,6 +70,10 @@ class ParameterController extends Controller
      */
     public function create()
     {
+        if ($response = $this->checkIzin('akses_master_tambah_parameter')) {
+            return $response;
+        }
+
         return view('parameter.create', [
             'kategori_parameters' => KategoriParameter::all(),
             'satuans' => Satuan::all(),
@@ -89,6 +86,10 @@ class ParameterController extends Controller
      */
     public function store(Request $request)
     {
+        if ($response = $this->checkIzin('akses_master_tambah_parameter')) {
+            return $response;
+        }
+
         // 0) Beri default jika tidak dikirim
         /* $request->merge([
             'jenis' => $request->input('jenis', 'kuantitatif')
@@ -146,10 +147,15 @@ class ParameterController extends Controller
      */
     public function edit(Parameter $parameter)
     {
+        if ($response = $this->checkIzin('akses_master_edit_parameter')) {
+            return $response;
+        }
+
         $selectedPilihan = $parameter
             ->pilihan_kualitatifs
             ->pluck('jenis_pilihan_kualitatif_id')
             ->toArray();
+
         return view('parameter.edit', [
             'parameter' => $parameter,
             'kategori_parameters' => KategoriParameter::all(),
@@ -164,6 +170,10 @@ class ParameterController extends Controller
      */
     public function update(Request $request, Parameter $parameter)
     {
+        if ($response = $this->checkIzin('akses_master_edit_parameter')) {
+            return $response;
+        }
+
         /* $request->merge([
             'jenis' => $request->input('jenis', $parameter->jenis),
         ]); */
@@ -215,6 +225,10 @@ class ParameterController extends Controller
      */
     public function destroy(Parameter $parameter)
     {
+        if ($response = $this->checkIzin('akses_master_hapus_parameter')) {
+            return $response;
+        }
+
         $parameter->delete();
 
         return redirect()->route('parameter.index')->with('success', 'Parameter berhasil dihapus.');

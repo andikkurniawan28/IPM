@@ -13,19 +13,12 @@ use Illuminate\Support\Facades\Auth;
 
 class MonitoringController extends Controller
 {
-    public function __construct()
-    {
-        $this->middleware(function ($request, $next) {
-            if (!Auth::check() || !Auth::user()->role || !Auth::user()->role->izin_akses_input) {
-                return redirect()->back()->with('error', 'Anda tidak memiliki izin akses.');
-            }
-
-            return $next($request);
-        });
-    }
-
     public function index(Request $request)
     {
+        if ($response = $this->checkIzin('akses_daftar_input_monitoring')) {
+            return $response;
+        }
+
         if ($request->ajax()) {
             // Eager load hubungan
             $data       = Monitoring::with('titik_pengamatan');
@@ -97,6 +90,10 @@ class MonitoringController extends Controller
      */
     public function create()
     {
+        if ($response = $this->checkIzin('akses_tambah_input_monitoring')) {
+            return $response;
+        }
+
         return view('monitoring.create2', [
             'titik_pengamatans' => TitikPengamatan::orderBy('urutan', 'asc')->get(),
             'parameters' => Parameter::all(),
@@ -108,7 +105,9 @@ class MonitoringController extends Controller
      */
     public function store(Request $request)
     {
-        // return $request;
+        if ($response = $this->checkIzin('akses_daftar_input_monitoring')) {
+            return $response;
+        }
 
         $request->validate([
             'periode'               => 'required|date',
@@ -189,6 +188,10 @@ class MonitoringController extends Controller
      */
     public function edit(Monitoring $monitoring)
     {
+        if ($response = $this->checkIzin('akses_daftar_edit_monitoring')) {
+            return $response;
+        }
+
         return view('monitoring.edit', [
             'monitoring' => $monitoring,
             'titik_pengamatans' => TitikPengamatan::orderBy('urutan', 'asc')->get(),
@@ -201,6 +204,10 @@ class MonitoringController extends Controller
      */
     public function update(Request $request, Monitoring $monitoring)
     {
+        if ($response = $this->checkIzin('akses_daftar_edit_monitoring')) {
+            return $response;
+        }
+
         // 1) Normalize jam (ambil HH:MM)
         $request->merge([
             'jam' => substr($request->jam, 0, 5),

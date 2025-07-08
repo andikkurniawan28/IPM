@@ -11,19 +11,12 @@ use Illuminate\Support\Facades\Auth;
 
 class UserController extends Controller
 {
-    public function __construct()
-    {
-        $this->middleware(function ($request, $next) {
-            if (!Auth::check() || !Auth::user()->role || !Auth::user()->role->izin_akses_master) {
-                return redirect()->back()->with('error', 'Anda tidak memiliki izin akses.');
-            }
-
-            return $next($request);
-        });
-    }
-
     public function index(Request $request)
     {
+        if ($response = $this->checkIzin('akses_master_daftar_user')) {
+            return $response;
+        }
+
         if ($request->ajax()) {
             $data = User::with(['role']); // eager load relasi
 
@@ -63,6 +56,10 @@ class UserController extends Controller
      */
     public function create()
     {
+        if ($response = $this->checkIzin('akses_master_tambah_user')) {
+            return $response;
+        }
+
         return view('user.create', [
             'roles' => Role::all(),
         ]);
@@ -73,6 +70,10 @@ class UserController extends Controller
      */
     public function store(Request $request)
     {
+        if ($response = $this->checkIzin('akses_master_tambah_user')) {
+            return $response;
+        }
+
         $validated = $request->validate([
             'name' => 'required|string|max:255',
             'email' => 'required|email|unique:users,email',
@@ -105,6 +106,10 @@ class UserController extends Controller
      */
     public function edit(User $user)
     {
+        if ($response = $this->checkIzin('akses_master_edit_user')) {
+            return $response;
+        }
+
         return view('user.edit', [
             'user' => $user,
             'roles' => Role::all(),
@@ -116,6 +121,10 @@ class UserController extends Controller
      */
     public function update(Request $request, User $user)
     {
+        if ($response = $this->checkIzin('akses_master_edit_user')) {
+            return $response;
+        }
+
         $validated = $request->validate([
             'name' => 'required|string|max:255',
             'email' => 'required|email|unique:users,email,' . $user->id,
@@ -143,6 +152,10 @@ class UserController extends Controller
      */
     public function destroy(User $user)
     {
+        if ($response = $this->checkIzin('akses_master_hapus_user')) {
+            return $response;
+        }
+
         $user->delete();
 
         return redirect()->route('user.index')->with('success', 'User berhasil dihapus.');

@@ -14,33 +14,81 @@
                         <input type="text" name="nama" id="nama" class="form-control" autofocus required>
                     </div>
 
+                    {{-- Checkbox Izin Detail --}}
                     <div class="mb-3">
-                        <label class="form-label d-block">Izin Akses</label>
+                        <label class="form-label d-block">Detail Izin Akses</label>
 
-                        <div class="form-check form-check-inline">
-                            <input class="form-check-input" type="checkbox" name="izin_akses_input" id="izin_akses_input"
-                                value="1" checked>
-                            <label class="form-check-label" for="izin_akses_input">Input</label>
-                        </div>
+                        @php
+                            $izinList = [
+                                'akses_master_daftar_kategori_parameter' => 'Daftar Kategori Parameter',
+                                'akses_master_tambah_kategori_parameter' => 'Tambah Kategori Parameter',
+                                'akses_master_edit_kategori_parameter' => 'Edit Kategori Parameter',
+                                'akses_master_hapus_kategori_parameter' => 'Hapus Kategori Parameter',
+                                'akses_master_daftar_satuan' => 'Daftar Satuan',
+                                'akses_master_tambah_satuan' => 'Tambah Satuan',
+                                'akses_master_edit_satuan' => 'Edit Satuan',
+                                'akses_master_hapus_satuan' => 'Hapus Satuan',
+                                'akses_master_daftar_jenis_pilihan_kualitatif' => 'Daftar Jenis Pilihan Kualitatif',
+                                'akses_master_tambah_jenis_pilihan_kualitatif' => 'Tambah Jenis Pilihan Kualitatif',
+                                'akses_master_edit_jenis_pilihan_kualitatif' => 'Edit Jenis Pilihan Kualitatif',
+                                'akses_master_hapus_jenis_pilihan_kualitatif' => 'Hapus Jenis Pilihan Kualitatif',
+                                'akses_master_daftar_parameter' => 'Daftar Parameter',
+                                'akses_master_tambah_parameter' => 'Tambah Parameter',
+                                'akses_master_edit_parameter' => 'Edit Parameter',
+                                'akses_master_hapus_parameter' => 'Hapus Parameter',
+                                'akses_master_daftar_zona' => 'Daftar Zona',
+                                'akses_master_tambah_zona' => 'Tambah Zona',
+                                'akses_master_edit_zona' => 'Edit Zona',
+                                'akses_master_hapus_zona' => 'Hapus Zona',
+                                'akses_master_daftar_titik_pengamatan' => 'Daftar Titik Pengamatan',
+                                'akses_master_tambah_titik_pengamatan' => 'Tambah Titik Pengamatan',
+                                'akses_master_edit_titik_pengamatan' => 'Edit Titik Pengamatan',
+                                'akses_master_hapus_titik_pengamatan' => 'Hapus Titik Pengamatan',
+                                'akses_master_daftar_role' => 'Daftar Role',
+                                'akses_master_tambah_role' => 'Tambah Role',
+                                'akses_master_edit_role' => 'Edit Role',
+                                'akses_master_hapus_role' => 'Hapus Role',
+                                'akses_master_daftar_user' => 'Daftar User',
+                                'akses_master_tambah_user' => 'Tambah User',
+                                'akses_master_edit_user' => 'Edit User',
+                                'akses_master_hapus_user' => 'Hapus User',
+                                'akses_daftar_input_monitoring' => 'Daftar Input Monitoring',
+                                'akses_tambah_input_monitoring' => 'Tambah Input Monitoring',
+                                'akses_edit_input_monitoring' => 'Edit Input Monitoring',
+                            ];
+                        @endphp
 
-                        {{-- <div class="form-check form-check-inline">
-                            <input class="form-check-input" type="checkbox" name="izin_akses_laporan"
-                                id="izin_akses_laporan" value="1" checked>
-                            <label class="form-check-label" for="izin_akses_laporan">Laporan</label>
-                        </div> --}}
+                        <div class="row">
+                            {{-- Izin statis --}}
+                            @foreach ($izinList as $key => $label)
+                                <div class="col-md-4">
+                                    <div class="form-check mb-2">
+                                        <input class="form-check-input" type="checkbox" name="{{ $key }}"
+                                            id="{{ $key }}" value="1" {{ old($key) ? 'checked' : '' }}>
+                                        <label class="form-check-label"
+                                            for="{{ $key }}">{{ $label }}</label>
+                                    </div>
+                                </div>
+                            @endforeach
 
-                        <div class="form-check form-check-inline">
-                            <input class="form-check-input" type="checkbox" name="izin_akses_master" id="izin_akses_master"
-                                value="1" checked>
-                            <label class="form-check-label" for="izin_akses_master">Master</label>
+                            {{-- Izin dinamis per Parameter --}}
+                            @foreach ($parameters as $parameter)
+                                @php
+                                    $dynamicKey = 'akses_input_param' . $parameter->id;
+                                    $label = "Input ({$parameter->simbol}| {$parameter->nama})";
+                                @endphp
+                                <div class="col-md-4">
+                                    <div class="form-check mb-2">
+                                        <input class="form-check-input" type="checkbox" name="{{ $dynamicKey }}"
+                                            id="{{ $dynamicKey }}" value="1" {{ old($dynamicKey) ? 'checked' : '' }}>
+                                        <label class="form-check-label"
+                                            for="{{ $dynamicKey }}">{{ $label }}</label>
+                                    </div>
+                                </div>
+                            @endforeach
                         </div>
                     </div>
 
-
-                    {{-- <div class="mb-3">
-                        <label for="kode" class="form-label">Kode</label>
-                        <input type="text" name="kode" id="kode" class="form-control" required>
-                    </div> --}}
 
                     <button type="submit" class="btn btn-primary">
                         <i class="bi bi-save"></i> Simpan

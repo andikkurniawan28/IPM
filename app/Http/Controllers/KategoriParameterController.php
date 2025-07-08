@@ -9,19 +9,13 @@ use Illuminate\Support\Facades\Auth;
 
 class KategoriParameterController extends Controller
 {
-    public function __construct()
-    {
-        $this->middleware(function ($request, $next) {
-            if (!Auth::check() || !Auth::user()->role || !Auth::user()->role->izin_akses_master) {
-                return redirect()->back()->with('error', 'Anda tidak memiliki izin akses.');
-            }
-
-            return $next($request);
-        });
-    }
 
     public function index(Request $request)
     {
+        if ($response = $this->checkIzin('akses_master_daftar_kategori_parameter')) {
+            return $response;
+        }
+
         if ($request->ajax()) {
             $data = KategoriParameter::query();
 
@@ -50,13 +44,20 @@ class KategoriParameterController extends Controller
 
     public function create()
     {
+        if ($response = $this->checkIzin('akses_master_tambah_kategori_parameter')) {
+            return $response;
+        }
+
         return view('kategori_parameter.create');
     }
 
     public function store(Request $request)
     {
+        if ($response = $this->checkIzin('akses_master_tambah_kategori_parameter')) {
+            return $response;
+        }
+
         $validated = $request->validate([
-            // 'kode' => 'required|string|max:50|unique:kategori_parameters,kode',
             'nama' => 'required|string|max:255|unique:kategori_parameters,nama',
         ]);
 
@@ -67,13 +68,20 @@ class KategoriParameterController extends Controller
 
     public function edit(KategoriParameter $kategori_parameter)
     {
+        if ($response = $this->checkIzin('akses_master_edit_kategori_parameter')) {
+            return $response;
+        }
+
         return view('kategori_parameter.edit', compact('kategori_parameter'));
     }
 
     public function update(Request $request, KategoriParameter $kategori_parameter)
     {
+        if ($response = $this->checkIzin('akses_master_edit_kategori_parameter')) {
+            return $response;
+        }
+
         $validated = $request->validate([
-            // 'kode' => 'required|string|max:50|unique:kategori_parameters,kode,' . $kategori_parameter->id,
             'nama' => 'required|string|max:255|unique:kategori_parameters,nama,' . $kategori_parameter->id,
         ]);
 
@@ -84,6 +92,10 @@ class KategoriParameterController extends Controller
 
     public function destroy(KategoriParameter $kategori_parameter)
     {
+        if ($response = $this->checkIzin('akses_master_hapus_kategori_parameter')) {
+            return $response;
+        }
+
         $kategori_parameter->delete();
 
         return redirect()->route('kategori_parameter.index')->with('success', 'Kategori Parameter berhasil dihapus.');

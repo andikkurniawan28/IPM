@@ -39,9 +39,9 @@
             </div>
         @endif --}}
 
-        <a href="{{ route('monitoring_all') }}" class="btn btn-outline-light mb-4">
+        {{-- <a href="{{ route('monitoring_all') }}" class="btn btn-outline-light mb-4">
             <i class="bi bi-graph-up"></i> Buka Monitoring
-        </a>
+        </a> --}}
 
         <div class="row">
             <div class="col-md-6 mb-3">

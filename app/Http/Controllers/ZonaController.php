@@ -9,19 +9,12 @@ use Illuminate\Support\Facades\Auth;
 
 class ZonaController extends Controller
 {
-    public function __construct()
-    {
-        $this->middleware(function ($request, $next) {
-            if (!Auth::check() || !Auth::user()->role || !Auth::user()->role->izin_akses_master) {
-                return redirect()->back()->with('error', 'Anda tidak memiliki izin akses.');
-            }
-
-            return $next($request);
-        });
-    }
-
     public function index(Request $request)
     {
+        if ($response = $this->checkIzin('akses_master_daftar_zona')) {
+            return $response;
+        }
+
         if ($request->ajax()) {
             $data = Zona::query();
 
@@ -49,11 +42,19 @@ class ZonaController extends Controller
 
     public function create()
     {
+        if ($response = $this->checkIzin('akses_master_tambah_zona')) {
+            return $response;
+        }
+
         return view('zona.create');
     }
 
     public function store(Request $request)
     {
+        if ($response = $this->checkIzin('akses_master_tambah_zona')) {
+            return $response;
+        }
+
         $validated = $request->validate([
             'kode' => 'required|string|max:50|unique:zonas,kode',
             'nama' => 'required|string|max:255|unique:zonas,nama',
@@ -66,11 +67,19 @@ class ZonaController extends Controller
 
     public function edit(Zona $zona)
     {
+        if ($response = $this->checkIzin('akses_master_edit_zona')) {
+            return $response;
+        }
+
         return view('zona.edit', compact('zona'));
     }
 
     public function update(Request $request, Zona $zona)
     {
+        if ($response = $this->checkIzin('akses_master_edit_zona')) {
+            return $response;
+        }
+
         $validated = $request->validate([
             'kode' => 'required|string|max:50|unique:zonas,kode,' . $zona->id,
             'nama' => 'required|string|max:255|unique:zonas,nama,' . $zona->id,
@@ -83,6 +92,10 @@ class ZonaController extends Controller
 
     public function destroy(Zona $zona)
     {
+        if ($response = $this->checkIzin('akses_master_hapus_zona')) {
+            return $response;
+        }
+
         $zona->delete();
 
         return redirect()->route('zona.index')->with('success', 'Zona berhasil dihapus.');
