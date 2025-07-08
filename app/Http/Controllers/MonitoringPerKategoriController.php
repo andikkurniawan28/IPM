@@ -11,6 +11,10 @@ class MonitoringPerKategoriController extends Controller
 {
     public function index($kategori_parameter_id)
     {
+        if ($response = $this->checkIzin("akses_monitoring_kategori{$kategori_parameter_id}")) {
+            return $response;
+        }
+
         $kategori_parameter = KategoriParameter::whereId($kategori_parameter_id)->get()->last();
         return view('monitoring_per_kategori.index', compact('kategori_parameter', 'kategori_parameter_id'));
     }

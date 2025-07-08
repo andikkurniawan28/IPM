@@ -12,7 +12,8 @@
 
                     <div class="mb-3">
                         <label for="nama" class="form-label">Nama Role</label>
-                        <input type="text" name="nama" id="nama" class="form-control" value="{{ old('nama', $role->nama) }}" required>
+                        <input type="text" name="nama" id="nama" class="form-control"
+                            value="{{ old('nama', $role->nama) }}" required>
                     </div>
 
                     {{-- Checkbox Izin Detail --}}
@@ -59,6 +60,11 @@
                             ];
                         @endphp
 
+                        <div class="form-check mb-3">
+                            <input type="checkbox" class="form-check-input" id="checkAll">
+                            <label class="form-check-label fw-bold" for="checkAll">Pilih Semua</label>
+                        </div>
+
                         <div class="row">
                             {{-- Izin statis --}}
                             @foreach ($izinList as $key => $label)
@@ -89,6 +95,42 @@
                                     </div>
                                 </div>
                             @endforeach
+
+                            {{-- Izin dinamis per Kategori Parameter --}}
+                            @foreach ($kategori_parameters as $kategori_parameter)
+                                @php
+                                    $dynamicKey =
+                                        'akses_monitoring_kategori' . Str::slug($kategori_parameter->id, '_');
+                                    $label = "Monitoring Kategori ({$kategori_parameter->nama})";
+                                @endphp
+                                <div class="col-md-4">
+                                    <div class="form-check mb-2">
+                                        <input class="form-check-input" type="checkbox" name="{{ $dynamicKey }}"
+                                            id="{{ $dynamicKey }}" value="1"
+                                            {{ old($dynamicKey, $role->{$dynamicKey} ?? false) ? 'checked' : '' }}>
+                                        <label class="form-check-label"
+                                            for="{{ $dynamicKey }}">{{ $label }}</label>
+                                    </div>
+                                </div>
+                            @endforeach
+
+                            {{-- Izin dinamis per Zona --}}
+                            @foreach ($zonas as $zona)
+                                @php
+                                    $dynamicKey = 'akses_monitoring_zona' . Str::slug($zona->id, '_');
+                                    $label = "Monitoring Zona ({$zona->nama})";
+                                @endphp
+                                <div class="col-md-4">
+                                    <div class="form-check mb-2">
+                                        <input class="form-check-input" type="checkbox" name="{{ $dynamicKey }}"
+                                            id="{{ $dynamicKey }}" value="1"
+                                            {{ old($dynamicKey, $role->{$dynamicKey} ?? false) ? 'checked' : '' }}>
+                                        <label class="form-check-label"
+                                            for="{{ $dynamicKey }}">{{ $label }}</label>
+                                    </div>
+                                </div>
+                            @endforeach
+
                         </div>
                     </div>
 
@@ -100,4 +142,39 @@
             </div>
         </div>
     </div>
+@endsection
+
+@section('scripts')
+    {{-- Select2 JS & CSS --}}
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
+    <link href="https://cdn.jsdelivr.net/npm/@ttskch/select2-bootstrap4-theme@1.5.2/dist/select2-bootstrap4.min.css"
+        rel="stylesheet" />
+
+    <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+
+    <script>
+        $(document).ready(function() {
+            $('#kategori_role_id, #satuan_id').select2({
+                theme: 'bootstrap4',
+                placeholder: '-- Pilih --',
+                allowClear: true
+            });
+        });
+    </script>
+    <script>
+        $(document).ready(function() {
+            $('#kategori_role_id, #satuan_id').select2({
+                theme: 'bootstrap4',
+                placeholder: '-- Pilih --',
+                allowClear: true
+            });
+
+            // Fitur Check All
+            $('#checkAll').on('change', function() {
+                const checked = $(this).is(':checked');
+                $('input[type=checkbox]').not('#checkAll').prop('checked', checked);
+            });
+        });
+    </script>
 @endsection

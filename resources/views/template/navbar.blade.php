@@ -132,7 +132,7 @@
                 {{-- @endif --}}
 
                 {{-- MENU DOKUMENTASI --}}
-                <li class="nav-item dropdown">
+                {{-- <li class="nav-item dropdown">
                     <a class="nav-link dropdown-toggle fw-semibold" href="#" id="navbarDocDropdown" role="button"
                         data-bs-toggle="dropdown" aria-expanded="false">
                         <i class="bi bi-file-earmark-text"></i> Dokumentasi
@@ -149,7 +149,7 @@
                             </a>
                         </li>
                     </ul>
-                </li>
+                </li> --}}
 
 
             </ul>

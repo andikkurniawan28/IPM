@@ -58,6 +58,10 @@
                             ];
                         @endphp
 
+                        <div class="form-check mb-3">
+                            <input type="checkbox" class="form-check-input" id="checkAll">
+                            <label class="form-check-label fw-bold" for="checkAll">Pilih Semua</label>
+                        </div>
                         <div class="row">
                             {{-- Izin statis --}}
                             @foreach ($izinList as $key => $label)
@@ -86,6 +90,41 @@
                                     </div>
                                 </div>
                             @endforeach
+
+                            {{-- Izin dinamis per Kategori Parameter --}}
+                            @foreach ($kategori_parameters as $kategori_parameter)
+                                @php
+                                    $dynamicKey = 'akses_monitoring_kategori' . $kategori_parameter->id;
+                                    $label = "Monitoring Kategori ({$kategori_parameter->nama})";
+                                @endphp
+                                <div class="col-md-4">
+                                    <div class="form-check mb-2">
+                                        <input class="form-check-input" type="checkbox" name="{{ $dynamicKey }}"
+                                            id="{{ $dynamicKey }}" value="1"
+                                            {{ old($dynamicKey) ? 'checked' : '' }}>
+                                        <label class="form-check-label"
+                                            for="{{ $dynamicKey }}">{{ $label }}</label>
+                                    </div>
+                                </div>
+                            @endforeach
+
+                            {{-- Izin dinamis per Zona --}}
+                            @foreach ($zonas as $zona)
+                                @php
+                                    $dynamicKey = 'akses_monitoring_zona' . $zona->id;
+                                    $label = "Monitoring Zona ({$zona->nama})";
+                                @endphp
+                                <div class="col-md-4">
+                                    <div class="form-check mb-2">
+                                        <input class="form-check-input" type="checkbox" name="{{ $dynamicKey }}"
+                                            id="{{ $dynamicKey }}" value="1"
+                                            {{ old($dynamicKey) ? 'checked' : '' }}>
+                                        <label class="form-check-label"
+                                            for="{{ $dynamicKey }}">{{ $label }}</label>
+                                    </div>
+                                </div>
+                            @endforeach
+
                         </div>
                     </div>
 
@@ -115,6 +154,21 @@
                 theme: 'bootstrap4',
                 placeholder: '-- Pilih --',
                 allowClear: true
+            });
+        });
+    </script>
+    <script>
+        $(document).ready(function() {
+            $('#kategori_role_id, #satuan_id').select2({
+                theme: 'bootstrap4',
+                placeholder: '-- Pilih --',
+                allowClear: true
+            });
+
+            // Fitur Check All
+            $('#checkAll').on('change', function() {
+                const checked = $(this).is(':checked');
+                $('input[type=checkbox]').not('#checkAll').prop('checked', checked);
             });
         });
     </script>

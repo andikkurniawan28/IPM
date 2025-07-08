@@ -11,6 +11,10 @@ class MonitoringPerZonaController extends Controller
 {
     public function index($zona_id)
     {
+        if ($response = $this->checkIzin("akses_monitoring_zona{$zona_id}")) {
+            return $response;
+        }
+
         $zona = Zona::select('id', 'nama', 'kode')->findOrFail($zona_id);
         return view('monitoring_per_zona.index', compact('zona', 'zona_id'));
     }

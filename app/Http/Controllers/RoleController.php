@@ -3,9 +3,12 @@
 namespace App\Http\Controllers;
 
 use App\Models\Role;
+use App\Models\Zona;
 use App\Models\Parameter;
+use Illuminate\Support\Str;
 use Illuminate\Http\Request;
 use Yajra\DataTables\DataTables;
+use App\Models\KategoriParameter;
 use Illuminate\Support\Facades\Auth;
 
 class RoleController extends Controller
@@ -18,6 +21,8 @@ class RoleController extends Controller
 
         if ($request->ajax()) {
             $parameters = Parameter::select(['id', 'nama', 'simbol'])->get();
+            $kategori_parameters = KategoriParameter::select(['id', 'nama'])->get();
+            $zonas = Zona::select(['id', 'nama'])->get();
             $data = Role::query();
 
             return DataTables::of($data)
@@ -34,7 +39,7 @@ class RoleController extends Controller
                     </form>
                 ';
                 })
-                ->addColumn('izin', function ($row) use ($parameters) {
+                ->addColumn('izin', function ($row) use ($parameters, $kategori_parameters, $zonas) {
                     $izinList = [
                         'akses_master_daftar_kategori_parameter' => 'Daftar Kategori Parameter',
                         'akses_master_tambah_kategori_parameter' => 'Tambah Kategori Parameter',
@@ -87,8 +92,23 @@ class RoleController extends Controller
                         $hasil[] = ($row->{$key} ?? false) ? "✅ $label" : "❌ $label";
                     }
 
+                    // Izin dinamis berdasarkan kategori parameter
+                    foreach ($kategori_parameters as $kategori) {
+                        $key = 'akses_monitoring_kategori' . Str::slug($kategori->id, '_');
+                        $label = "Monitoring Kategori ({$kategori->nama})";
+                        $hasil[] = ($row->{$key} ?? false) ? "✅ $label" : "❌ $label";
+                    }
+
+                    // Izin dinamis berdasarkan zona
+                    foreach ($zonas as $zona) {
+                        $key = 'akses_monitoring_zona' . Str::slug($zona->id, '_');
+                        $label = "Monitoring Zona ({$zona->nama})";
+                        $hasil[] = ($row->{$key} ?? false) ? "✅ $label" : "❌ $label";
+                    }
+
                     return implode('<br>', $hasil);
                 })
+
                 ->rawColumns(['aksi', 'izin'])
                 ->make(true);
         }
@@ -104,9 +124,13 @@ class RoleController extends Controller
         }
 
         $parameters = Parameter::select(['id', 'nama', 'simbol'])->get();
+        $kategori_parameters = KategoriParameter::select(['id', 'nama'])->get();
+        $zonas = Zona::select(['id', 'nama'])->get();
 
         return view('role.create', compact(
-            'parameters'
+            'parameters',
+            'kategori_parameters',
+            'zonas',
         ));
     }
 
@@ -161,9 +185,23 @@ class RoleController extends Controller
         ];
 
         // Tambahkan parameter dinamis
-        $parameters = Parameter::select(['id', 'nama', 'simbol'])->get(); // asumsi kamu sudah meng-import model Parameter
+        $parameters = Parameter::select(['id', 'nama', 'simbol'])->get();
         foreach ($parameters as $parameter) {
             $izinList[] = 'akses_input_param' . $parameter->id;
+        }
+
+        // Tambahkan kategori parameter dinamis
+        $kategori_parameters = KategoriParameter::select(['id', 'nama'])->get();
+        foreach ($kategori_parameters as $kategori) {
+            $slug = Str::slug($kategori->id, '_');
+            $izinList[] = 'akses_monitoring_kategori' . $slug;
+        }
+
+        // Tambahkan zona dinamis
+        $zonas = Zona::select(['id', 'nama'])->get();
+        foreach ($zonas as $zona) {
+            $slug = Str::slug($zona->id, '_');
+            $izinList[] = 'akses_monitoring_zona' . $slug;
         }
 
         // Siapkan data yang akan disimpan
@@ -185,12 +223,16 @@ class RoleController extends Controller
         }
 
         $parameters = Parameter::select(['id', 'nama', 'simbol'])->get();
+        $kategori_parameters = KategoriParameter::select(['id', 'nama'])->get();
+        $zonas = Zona::select(['id', 'nama'])->get();
 
-        return view('role.edit', compact('role', 'parameters'));
+        return view('role.edit', compact('role', 'parameters', 'kategori_parameters', 'zonas'));
     }
 
     public function update(Request $request, Role $role)
     {
+        // return $request;
+
         if ($response = $this->checkIzin('akses_master_edit_role')) {
             return $response;
         }
@@ -245,7 +287,21 @@ class RoleController extends Controller
             $izinList[] = 'akses_input_param' . $parameter->id;
         }
 
-        // Simpan status tiap izin (1 jika checked, 0 jika tidak)
+        // Tambahkan izin dinamis berdasarkan kategori parameter
+        $kategori_parameters = KategoriParameter::select(['id', 'nama'])->get();
+        foreach ($kategori_parameters as $kategori) {
+            $slug = Str::slug($kategori->id, '_');
+            $izinList[] = 'akses_monitoring_kategori' . $slug;
+        }
+
+        // Tambahkan izin dinamis berdasarkan zona
+        $zonas = Zona::select(['id', 'nama'])->get();
+        foreach ($zonas as $zona) {
+            $slug = Str::slug($zona->id, '_');
+            $izinList[] = 'akses_monitoring_zona' . $slug;
+        }
+
+        // Simpan status tiap izin (true jika dicentang, false jika tidak)
         foreach ($izinList as $izin) {
             $validated[$izin] = $request->has($izin);
         }

@@ -12,6 +12,11 @@ use App\Models\TitikPengamatan;
 use Illuminate\Database\Seeder;
 use App\Models\KategoriParameter;
 use App\Models\ParameterTitikPengamatan;
+use Illuminate\Support\Str;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Schema;
+use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Schema\Blueprint;
 
 class DatabaseSeeder extends Seeder
 {
@@ -525,7 +530,7 @@ class DatabaseSeeder extends Seeder
                 'jenis' => 'kuantitatif',
             ],
         ];
-        foreach($parameters as $parameter){
+        foreach ($parameters as $parameter) {
             Parameter::create($parameter);
         }
 
@@ -670,5 +675,28 @@ class DatabaseSeeder extends Seeder
 
         // Insert ke tabel pivot parameter_titik_pengamatan
         ParameterTitikPengamatan::insert($insert);
+
+        // Seeder KategoriParameter dan Zona sudah dijalankan sebelum ini
+        // Tambahkan kolom roles yang sesuai dari KategoriParameter
+        foreach (KategoriParameter::all() as $kategori) {
+            $columnName = 'akses_monitoring_kategori' . Str::slug($kategori->id, '_');
+
+            if (!Schema::hasColumn('roles', $columnName)) {
+                Schema::table('roles', function ($table) use ($columnName) {
+                    $table->boolean($columnName)->default(false)->after('updated_at');
+                });
+            }
+        }
+
+        // Tambahkan kolom roles yang sesuai dari Zona
+        foreach (Zona::all() as $zona) {
+            $columnName = 'akses_monitoring_zona' . Str::slug($zona->id, '_');
+
+            if (!Schema::hasColumn('roles', $columnName)) {
+                Schema::table('roles', function ($table) use ($columnName) {
+                    $table->boolean($columnName)->default(false)->after('updated_at');
+                });
+            }
+        }
     }
 }
