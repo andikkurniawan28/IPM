@@ -146,6 +146,7 @@ class MonitoringPerZonaController extends Controller
                 'kode' => $titik->kode,
                 'nama' => $titik->nama,
                 'zona' => $titik->zona,
+                'lebar' => $titik->lebar,
                 'parameters' => $parameterList,
                 'monitorings' => $monitoringData,
                 'agregasi' => $aggregated

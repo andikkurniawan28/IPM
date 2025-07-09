@@ -35,6 +35,11 @@
                         <textarea name="keterangan" id="keterangan" class="form-control" rows="3"></textarea>
                     </div>
 
+                    <div class="mb-3">
+                        <label for="lebar" class="form-label">Lebar</label>
+                        <input name="lebar" id="lebar" class="form-control" class="form-control" value="4"></input>
+                    </div>
+
                     <button type="submit" class="btn btn-primary">
                         <i class="bi bi-save"></i> Simpan
                     </button>

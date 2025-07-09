@@ -57,6 +57,7 @@
                                 'akses_daftar_input_monitoring' => 'Daftar Input Monitoring',
                                 'akses_tambah_input_monitoring' => 'Tambah Input Monitoring',
                                 'akses_edit_input_monitoring' => 'Edit Input Monitoring',
+                                'akses_hapus_input_monitoring' => 'Hapus Input Monitoring',
                             ];
                         @endphp
 

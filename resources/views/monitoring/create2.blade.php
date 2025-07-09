@@ -43,19 +43,23 @@
                                         <sub>({{ $parameter->satuan->simbol }})</sub>
                                     @endif
                                 </label>
-
+                                @php
+                                    $aksesKey = 'akses_input_param' . $parameter->id;
+                                    $readonly = optional(auth()->user()->role)->{$aksesKey} == 0 ? 'readonly' : '';
+                                    $disabled = optional(auth()->user()->role)->{$aksesKey} == 0 ? 'disabled' : ''; // untuk select
+                                @endphp
                                 @if ($parameter->jenis === 'kuantitatif')
                                     <input type="number" step="any" name="param{{ $parameter->id }}"
                                         id="param{{ $parameter->id }}" class="form-control form-control-sm"
-                                        placeholder="Masukkan {{ $parameter->nama }}...">
+                                        placeholder="Masukkan {{ $parameter->nama }}..." {{ $readonly }}>
                                 @elseif ($parameter->jenis === 'kualitatif_entry')
                                     {{-- Text input untuk kualitatif_entry --}}
                                     <input type="text" step="any" name="param{{ $parameter->id }}"
                                         id="param{{ $parameter->id }}" class="form-control form-control-sm"
-                                        placeholder="Masukkan {{ $parameter->nama }}...">
+                                        placeholder="Masukkan {{ $parameter->nama }}..." {{ $readonly }}>
                                 @else
                                     <select class="form-select form-select-sm" name="param{{ $parameter->id }}"
-                                        id="param{{ $parameter->id }}">
+                                        id="param{{ $parameter->id }}" {{ $disabled }}>
                                         <option value="" disabled selected>-- Pilih --</option>
                                         @foreach ($parameter->pilihan_kualitatifs as $pil)
                                             <option value="{{ $pil->jenis_pilihan_kualitatif->keterangan }}">

@@ -71,11 +71,11 @@ class MonitoringController extends Controller
                     return '
                         <a href="' . $showUrl . '" class="btn btn-sm btn-info">Log</a>
                         <a href="' . $editUrl . '" class="btn btn-sm btn-warning">Edit</a>
+                        <form action="' . $deleteUrl . '" method="POST" class="d-inline" onsubmit="return confirm(\'Hapus data ini?\')">
+                            ' . csrf_field() . method_field('DELETE') . '
+                            <button class="btn btn-sm btn-danger">Hapus</button>
+                        </form>
                     ';
-                    // <form action="' . $deleteUrl . '" method="POST" class="d-inline" onsubmit="return confirm(\'Hapus data ini?\')">
-                    //         ' . csrf_field() . method_field('DELETE') . '
-                    //         <button class="btn btn-sm btn-danger">Hapus</button>
-                    //     </form>
                 })
 
                 ->rawColumns(['parameter', 'aksi'])
@@ -105,7 +105,7 @@ class MonitoringController extends Controller
      */
     public function store(Request $request)
     {
-        if ($response = $this->checkIzin('akses_daftar_input_monitoring')) {
+        if ($response = $this->checkIzin('akses_tambah_input_monitoring')) {
             return $response;
         }
 
@@ -188,7 +188,7 @@ class MonitoringController extends Controller
      */
     public function edit(Monitoring $monitoring)
     {
-        if ($response = $this->checkIzin('akses_daftar_edit_monitoring')) {
+        if ($response = $this->checkIzin('akses_edit_input_monitoring')) {
             return $response;
         }
 
@@ -204,7 +204,7 @@ class MonitoringController extends Controller
      */
     public function update(Request $request, Monitoring $monitoring)
     {
-        if ($response = $this->checkIzin('akses_daftar_edit_monitoring')) {
+        if ($response = $this->checkIzin('akses_edit_input_monitoring')) {
             return $response;
         }
 
@@ -306,6 +306,10 @@ class MonitoringController extends Controller
      */
     public function destroy(Monitoring $monitoring)
     {
+        if ($response = $this->checkIzin('akses_hapus_input_monitoring')) {
+            return $response;
+        }
+
         $monitoring->delete();
 
         return redirect()->route('monitoring.index')->with('success', 'Monitoring berhasil dihapus.');

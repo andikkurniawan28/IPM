@@ -50,7 +50,7 @@
 
                         data.titik_pengamatans.forEach(tp => {
                             const col = document.createElement('div');
-                            col.className = 'col-md-4';
+                            col.className = 'col-md-' + tp.lebar;
 
                             // Header parameter
                             let headerRow = `<th><small>Jam</small></th>`;
@@ -78,10 +78,10 @@
                             }
 
                             // Agregasi row
-                            let agregasiRow = `<td><strong>Agregasi</strong></td>`;
+                            let agregasiRow = `<td><small>Agr</small></td>`;
                             tp.parameters.forEach(p => {
                                 const val = tp.agregasi?.['param' + p.id];
-                                agregasiRow += `<td><strong>${val ?? '-'}</strong></td>`;
+                                agregasiRow += `<td><small>${val ?? '-'}</small></td>`;
                             });
 
                             col.innerHTML = `

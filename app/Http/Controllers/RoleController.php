@@ -76,6 +76,7 @@ class RoleController extends Controller
                         'akses_daftar_input_monitoring' => 'Daftar Input Monitoring',
                         'akses_tambah_input_monitoring' => 'Tambah Input Monitoring',
                         'akses_edit_input_monitoring' => 'Edit Input Monitoring',
+                        'akses_hapus_input_monitoring' => 'Hapus Input Monitoring',
                     ];
 
                     $hasil = [];
@@ -182,6 +183,7 @@ class RoleController extends Controller
             'akses_daftar_input_monitoring',
             'akses_tambah_input_monitoring',
             'akses_edit_input_monitoring',
+            'akses_hapus_input_monitoring',
         ];
 
         // Tambahkan parameter dinamis
@@ -279,6 +281,7 @@ class RoleController extends Controller
             'akses_daftar_input_monitoring',
             'akses_tambah_input_monitoring',
             'akses_edit_input_monitoring',
+            'akses_hapus_input_monitoring',
         ];
 
         // Tambahkan izin dinamis berdasarkan parameter

@@ -47,6 +47,11 @@
                     </div>
 
                     <div class="mb-3">
+                        <label for="lebar" class="form-label">Lebar</label>
+                        <input name="lebar" id="lebar" class="form-control" class="form-control" value="{{ $titik_pengamatan->lebar }}"></input>
+                    </div>
+
+                    <div class="mb-3">
                         <label class="form-label">Pilih Parameter</label>
                         <div class="row">
                             @foreach ($parameters as $parameter)

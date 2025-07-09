@@ -87,6 +87,7 @@ class TitikPengamatanController extends Controller
             'kode' => 'required|string|max:50|unique:titik_pengamatans,kode',
             'nama' => 'required|string|max:255|unique:titik_pengamatans,nama',
             'keterangan' => 'nullable|string',
+            'lebar' => 'required|integer',
         ]);
 
         // Simpan Titik Pengamatan
@@ -95,6 +96,7 @@ class TitikPengamatanController extends Controller
             'zona_id' => $validated['zona_id'],
             'kode' => $validated['kode'],
             'nama' => $validated['nama'],
+            'lebar' => $validated['lebar'],
             'keterangan' => $validated['keterangan'] ?? null,
         ]);
 
@@ -126,6 +128,7 @@ class TitikPengamatanController extends Controller
             'kode' => 'required|string|max:50|unique:titik_pengamatans,kode,' . $id,
             'nama' => 'required|string|max:255|unique:titik_pengamatans,nama,' . $id,
             'keterangan' => 'nullable|string',
+            'lebar' => 'required|integer',
             'parameter_id' => 'array',
             'parameter_id.*' => 'exists:parameters,id',
         ]);
@@ -138,6 +141,7 @@ class TitikPengamatanController extends Controller
             'kode' => $validated['kode'],
             'nama' => $validated['nama'],
             'keterangan' => $validated['keterangan'] ?? null,
+            'lebar' => $validated['lebar'],
         ]);
 
         // Reset semua parameter_titik_pengamatan sebelumnya
